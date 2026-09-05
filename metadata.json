@@ -1,0 +1,6 @@
+{
+  "name": "PALYA - Health Stewardship",
+  "description": "Unified digital platform for livestock health management, treatment records, antimicrobial-use monitoring, MRL compliance and veterinary decision support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
