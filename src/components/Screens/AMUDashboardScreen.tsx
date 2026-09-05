@@ -6,6 +6,9 @@ import {
   AlertTriangle
 } from 'lucide-react';
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 interface DrugBreakdownItem {
   drug: string;
   count: number;
@@ -46,8 +49,8 @@ export const AMUDashboardScreen: React.FC = () => {
     const fetchData = async () => {
       try {
         const [summaryRes, treatmentsRes] = await Promise.all([
-          fetch('http://localhost:5000/api/amu-summary'),
-          fetch('http://localhost:5000/api/treatments'),
+          fetch(`${API_BASE_URL}/api/amu-summary`),
+          fetch(`${API_BASE_URL}/api/treatments`),
         ]);
 
         const summaryData = await summaryRes.json();

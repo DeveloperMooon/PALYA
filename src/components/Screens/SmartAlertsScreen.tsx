@@ -11,6 +11,8 @@ import {
 } from 'lucide-react';
 import { Animal, ScreenId } from '../../types';
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || 'http://localhost:5000';
 // Backend se aane wala real alert shape
 interface RealAlert {
   id: string;
@@ -47,7 +49,7 @@ export const SmartAlertsScreen: React.FC<SmartAlertsScreenProps> = ({
   useEffect(() => {
     const fetchAlerts = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/alerts');
+        const response = await fetch(`${API_BASE_URL}/api/alerts`);
         const data = await response.json();
         if (!response.ok) throw new Error(data.message || 'Failed to load alerts');
         setAlerts(data.data || []);

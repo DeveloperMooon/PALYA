@@ -13,6 +13,8 @@ import {
 } from 'lucide-react';
 import { Animal, TreatmentRecord, ScreenId } from '../../types';
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || 'http://localhost:5000';
 interface RecordTreatmentScreenProps {
   animals: Animal[];
   onAddTreatment: (newTrt: TreatmentRecord) => void;
@@ -76,7 +78,7 @@ export const RecordTreatmentScreen: React.FC<RecordTreatmentScreenProps> = ({
   useEffect(() => {
     const fetchMedicines = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/medicines');
+        const response = await fetch(`${API_BASE_URL}/api/medicines`);
         const result = await response.json();
 
         if (!response.ok) {
@@ -161,7 +163,7 @@ export const RecordTreatmentScreen: React.FC<RecordTreatmentScreenProps> = ({
       : null;
 
     try {
-      const response = await fetch('http://localhost:5000/api/treatments', {
+      const response = await fetch(`${API_BASE_URL}/api/treatments`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -8,6 +8,9 @@ import {
 } from 'lucide-react';
 import { ScreenId } from '../../types';
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 interface LabResultScreenProps {
   onNavigate: (screen: ScreenId) => void;
 }
@@ -56,7 +59,7 @@ export const LabResultScreen: React.FC<LabResultScreenProps> = ({
   useEffect(() => {
     const fetchTreatments = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/treatments');
+        const response = await fetch(`${API_BASE_URL}/api/treatments`);
         const data = await response.json();
 
         if (!response.ok) {
@@ -104,7 +107,7 @@ export const LabResultScreen: React.FC<LabResultScreenProps> = ({
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/treatments/${selectedTreatmentId}/residue`,
+        `${API_BASE_URL}/api/treatments/${selectedTreatmentId}/residue`,
         {
           method: 'PATCH',
           headers: {

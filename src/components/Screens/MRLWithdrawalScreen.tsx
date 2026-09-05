@@ -15,6 +15,9 @@ import {
 } from 'lucide-react';
 import { Animal } from '../../types';
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 interface MRLWithdrawalScreenProps {
   animals: Animal[];
   preselectedAnimal?: Animal | null;
@@ -91,7 +94,7 @@ export const MRLWithdrawalScreen: React.FC<MRLWithdrawalScreenProps> = ({
   useEffect(() => {
     const fetchMedicines = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/medicines');
+        const response = await fetch(`${API_BASE_URL}/api/medicines`);
         const result = await response.json();
 
         if (!response.ok) {
@@ -182,7 +185,7 @@ export const MRLWithdrawalScreen: React.FC<MRLWithdrawalScreenProps> = ({
       setWithdrawalError(null);
 
       const response = await fetch(
-        `http://localhost:5000/api/withdrawal/${encodeURIComponent(animalId)}`
+        `${API_BASE_URL}/api/withdrawal/${encodeURIComponent(animalId)}`
       );
 
       if (!response.ok) {
