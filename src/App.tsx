@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+
 import {
   ScreenId,
   Animal,
@@ -15,6 +16,10 @@ import {
 
 type AlertItem = typeof INITIAL_ALERTS[number];
 type VeterinaryCase = typeof INITIAL_VET_CASES[number];
+
+// API configuration
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 // Context
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -151,9 +156,9 @@ function AppContent() {
   useEffect(() => {
     const syncCOW024Withdrawal = async () => {
       try {
-        const response = await fetch(
-          'http://localhost:5000/api/withdrawal/COW-024'
-        );
+       const response = await fetch(
+  `${API_BASE_URL}/api/withdrawal/COW-024`
+);
 
         if (!response.ok) {
           console.error(
