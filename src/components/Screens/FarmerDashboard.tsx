@@ -18,21 +18,24 @@ import { Animal, ScreenId, TreatmentRecord, AlertItem } from '../../types';
 
 interface FarmerDashboardProps {
   animals: Animal[];
-  onNavigate: (screen: ScreenId) => void;
+  onNavigate: (screen: string) => void;
+  onOpenScanModal: () => void;
   onSelectAnimal: (animal: Animal) => void;
-  onOpenScanModal?: () => void;
   treatments?: TreatmentRecord[];
   alerts?: AlertItem[];
+  userRole?: 'farmer' | 'veterinarian';
 }
 
-export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
+export function FarmerDashboard({
   animals,
   onNavigate,
-  onSelectAnimal,
   onOpenScanModal,
-  treatments = [],
-  alerts = []
-}) => {
+  onSelectAnimal,
+  treatments,
+  alerts,
+  userRole = 'farmer'
+}: FarmerDashboardProps) {
+  
   const [searchFilter, setSearchFilter] = useState('');
   const [speciesFilter, setSpeciesFilter] = useState('All');
   const [statusFilter, setStatusFilter] = useState('All');
@@ -62,8 +65,8 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-black text-primary tracking-tight">
-            Good afternoon, Rajesh!
-          </h1>
+  Good afternoon, {userRole === 'farmer' ? 'Rajesh' : 'Dr. Suresh'}!
+</h1>
           <p className="text-sm text-on-surface-variant mt-1">
             Here's an overview of your livestock health and compliance status.
           </p>

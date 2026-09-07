@@ -20,7 +20,7 @@ const app = express();
 const PORT = Number(process.env.PORT) || 5000;
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
 
 // ---------------------------------------------------------
@@ -30,6 +30,38 @@ app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', message: 'PALYA backend is running' });
 });
 
+app.post('/api/animals', async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('animals')
+      .insert([req.body])
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    res.json(data);
+  } catch (error) {
+    console.error('Animal registration error:', error);
+    res.status(500).json({ error: 'Failed to register animal' });
+  }
+});
+
+app.get('/api/animals', async (_req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('animals')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    res.json(data);
+  } catch (error) {
+    console.error('Fetch animals error:', error);
+    res.status(500).json({ error: 'Failed to fetch animals' });
+  }
+});
 
 // ---------------------------------------------------------
 // DATABASE CONNECTION TEST
@@ -391,10 +423,185 @@ app.post('/api/treatments', async (req, res) => {
   res.status(201).json({ status: 'ok', message: 'Treatment saved successfully', data });
 });
 
+app.post('/api/ai/voice', async (req, res) => {
+  try {
+    const { audioBase64, mimeType } = req.body;
 
-// ---------------------------------------------------------
-// START BACKEND SERVER
-// ---------------------------------------------------------
+    if (!audioBase64) {
+      return res.status(400).json({
+        error: 'Audio is required',
+      });
+    }
+
+    // =========================
+    // 1. SPEECH -> TEXT
+    // =========================
+
+    const audioBuffer = Buffer.from(audioBase64, 'base64');
+
+    const formData = new FormData();
+
+    formData.append(
+      'file',
+      new Blob([audioBuffer], {
+        type: mimeType || 'audio/webm',
+      }),
+      'recording.webm'
+    );
+
+    formData.append('model', 'saaras:v3');
+    formData.append('mode', 'codemix');
+    formData.append('language_code', 'hi-IN');
+  console.log('SENDING AUDIO TO SARVAM:', audioBuffer.length);
+    const sttResponse = await fetch(
+      'https://api.sarvam.ai/speech-to-text',
+      {
+        method: 'POST',
+        headers: {
+          'api-subscription-key':
+            process.env.SARVAM_API_KEY!,
+        },
+        body: formData,
+      }
+    );
+
+    if (!sttResponse.ok) {
+      const errorText = await sttResponse.text();
+
+      console.error(
+        'SARVAM STT ERROR:',
+        sttResponse.status,
+        errorText
+      );
+
+      return res.status(500).json({
+        error: 'Speech recognition failed',
+      });
+    }
+
+    const sttData = await sttResponse.json();
+    console.log('SARVAM STT RESPONSE:', sttData);
+
+    const transcript = sttData.transcript || '';
+
+    console.log('STT:', transcript);
+
+    if (!transcript.trim()) {
+      return res.status(400).json({
+        error: 'No speech detected',
+      });
+    }
+
+    // =========================
+    // 2. AI RESPONSE
+    // =========================
+
+    const aiResponse = await fetch(
+      'https://api.sarvam.ai/v1/chat/completions',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'api-subscription-key':
+            process.env.SARVAM_API_KEY!,
+        },
+        body: JSON.stringify({
+          model: 'sarvam-105b-conversations',
+          messages: [
+            {
+              role: 'system',
+              content:
+                'You are PALYA AI Assistant. Help farmers and veterinarians with livestock health, treatments, medicines, antimicrobial stewardship and withdrawal periods. Keep answers practical, concise and easy to understand. Respond naturally in the language used by the farmer.',
+            },
+            {
+              role: 'user',
+              content: transcript,
+            },
+          ],
+        }),
+      }
+    );
+
+    if (!aiResponse.ok) {
+      const errorText = await aiResponse.text();
+
+      console.error(
+        'SARVAM AI ERROR:',
+        aiResponse.status,
+        errorText
+      );
+
+      return res.status(500).json({
+        error: 'AI response failed',
+      });
+    }
+
+    const aiData = await aiResponse.json();
+
+    const reply =
+      aiData.choices?.[0]?.message?.content ||
+      'Sorry, I could not generate a response.';
+
+    console.log('AI:', reply);
+
+    // =========================
+    // 3. TEXT -> SPEECH
+    // =========================
+
+    const ttsResponse = await fetch(
+      'https://api.sarvam.ai/text-to-speech',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'api-subscription-key':
+            process.env.SARVAM_API_KEY!,
+        },
+        body: JSON.stringify({
+          text: reply,
+          language_code: 'hi-IN',
+          speaker: 'shubh',
+          model: 'bulbul:v3',
+          output_audio_codec: 'wav',
+        }),
+      }
+    );
+
+    if (!ttsResponse.ok) {
+      const errorText = await ttsResponse.text();
+
+      console.error(
+        'SARVAM TTS ERROR:',
+        ttsResponse.status,
+        errorText
+      );
+
+      return res.json({
+        transcript,
+        reply,
+        audio: null,
+      });
+    }
+
+    const ttsData = await ttsResponse.json();
+
+    console.log('TTS generated:', !!ttsData.audios?.[0]);
+
+    return res.json({
+      transcript,
+      reply,
+      audio: ttsData.audios?.[0] || null,
+    });
+
+  } catch (error) {
+    console.error('VOICE AI ERROR:', error);
+
+    return res.status(500).json({
+      error: 'Voice assistant failed',
+    });
+  }
+});
+
 app.listen(PORT, () => {
-  console.log(`PALYA backend running at http://localhost:${PORT}`);
+  console.log(`PALYA backend running on port ${PORT}`);
 });

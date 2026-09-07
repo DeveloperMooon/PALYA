@@ -51,6 +51,9 @@ import { AnimalDetailScreen } from './components/Screens/AnimalDetailScreen';
 import { FarmManagementScreen } from './components/Screens/FarmManagementScreen';
 import { RecordTreatmentScreen } from './components/Screens/RecordTreatmentScreen';
 import { LabResultScreen } from './components/Screens/LabResultScreen';
+import { AIAssistantScreen } from './components/Screens/AIAssistantScreen';
+
+
 const AUTH_SCREENS: ScreenId[] = [
   'sign-in',
   'register',
@@ -95,6 +98,51 @@ function AppContent() {
   // Core Reactive States
   const [animals, setAnimals] =
     useState<Animal[]>(INITIAL_ANIMALS);
+
+    useEffect(() => {
+const loadAnimals = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/animals`);
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch animals');
+    }
+
+    const data = await response.json();
+
+    const mappedAnimals: Animal[] = data.map((animal: any) => ({
+      id: animal.animal_id,
+      tag: animal.tag || animal.animal_id,
+      name: animal.name,
+      species: animal.species,
+      breed: animal.breed,
+      gender: animal.gender,
+      age: animal.age,
+      weight: Number(animal.weight) || 0,
+      farmName: animal.farm_name,
+      farmId: animal.farm_id,
+      healthStatus: animal.health_status,
+      withdrawalStatus: animal.withdrawal_status,
+      withdrawalDaysLeft: animal.withdrawal_days,
+      clearanceDate: animal.clearance_date,
+      lastTreatmentDate: animal.last_treatment_date,
+      lastTreatmentDrug: animal.last_treatment_drug,
+      lastTreatmentType: animal.last_treatment_type,
+      riskLevel: animal.risk_level,
+      imageUrl: animal.image_url || INITIAL_ANIMALS.find(
+  (a) => a.id === animal.animal_id
+)?.imageUrl,
+    }));
+
+    setAnimals(mappedAnimals);
+    console.log('Animals loaded from Supabase:', mappedAnimals);
+  } catch (error) {
+    console.error('Failed to load animals:', error);
+  }
+};
+
+  loadAnimals();
+}, []);
 
   const [treatments, setTreatments] =
     useState<TreatmentRecord[]>(INITIAL_TREATMENTS);
@@ -391,49 +439,80 @@ function AppContent() {
     }
   };
 
-  const handleRegisterAnimal = (
-    newAnimal: Animal
-  ) => {
-    setAnimals((prev) => [
-      newAnimal,
-      ...prev
-    ]);
+const handleRegisterAnimal = async (newAnimal: Animal) => {
+  console.log('REGISTER HANDLER CALLED');
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/animals`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        animal_id: newAnimal.id,
+        species: newAnimal.species,
+        breed: newAnimal.breed,
+        farm_id: newAnimal.farmId,
+        name: newAnimal.name,
+        gender: newAnimal.gender,
+        age: newAnimal.age,
+        weight: newAnimal.weight,
+        farm_name: newAnimal.farmName,
+        health_status: newAnimal.healthStatus,
+        withdrawal_status: newAnimal.withdrawalStatus,
+        withdrawal_days: newAnimal.withdrawalDaysLeft,
+        clearance_date: newAnimal.clearanceDate,
+        last_treatment_date: newAnimal.lastTreatmentDate,
+        last_treatment_drug: newAnimal.lastTreatmentDrug,
+        last_treatment_type: newAnimal.lastTreatmentType,
+        risk_level: newAnimal.riskLevel,
+        image_url: newAnimal.imageUrl,
+      }),
+    });
 
+    if (!response.ok) {
+      throw new Error('Failed to register animal');
+    }
+
+    const savedAnimal = await response.json();
+
+    setAnimals((prev) => [newAnimal, ...prev]);
     setSelectedAnimal(newAnimal);
     setCurrentScreen('animal-detail');
-  };
 
-  const handleMarkAlertReviewed = (
-    alertId: string
-  ) => {
-    setAlerts((prev) =>
-      prev.map((a) =>
-        a.id === alertId
-          ? {
-              ...a,
-              reviewed: !a.reviewed
-            }
-          : a
-      )
-    );
-  };
+    console.log('Animal saved to Supabase:', savedAnimal);
+  } catch (error) {
+    console.error('Animal registration failed:', error);
+    alert('Failed to register animal. Please try again.');
+  }
+};
 
-  const handleTagScanned = (
-    tag: string
-  ) => {
-    const found = animals.find(
-      (a) =>
-        a.tag === tag ||
-        a.id === tag
-    );
+const handleMarkAlertReviewed = (alertId: string) => {
+  setAlerts((prev) =>
+    prev.map((a) =>
+      a.id === alertId
+        ? {
+            ...a,
+            reviewed: !a.reviewed,
+          }
+        : a
+    )
+  );
+};
 
-    if (found) {
-      setSelectedAnimal(found);
-      setCurrentScreen('animal-detail');
-    } else {
-      setCurrentScreen('livestock');
-    }
-  };
+const handleTagScanned = (tag: string) => {
+  const found = animals.find(
+    (a) =>
+      a.tag === tag ||
+      a.id === tag
+  );
+
+  if (found) {
+    setSelectedAnimal(found);
+    setCurrentScreen('animal-detail');
+  } else {
+    setCurrentScreen('livestock');
+  }
+};
 
   const handleAdvanceToReady = () => {
     setLaunchStage('ready');
@@ -580,6 +659,13 @@ function AppContent() {
                 }
               />
             )}
+            
+{/*
+{currentScreen === 'ai-assistant' && (
+  <AIAssistantScreen />
+)}
+*/}
+
 
             {/* Main Content Area */}
             <div className="flex-1 flex flex-col lg:pl-64 min-w-0 pb-16 lg:pb-0">
@@ -621,7 +707,7 @@ function AppContent() {
               />
 
               {/* Dynamic Screen Viewport */}
-              <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-[1440px] w-full mx-auto">
+              <main className="flex-1 p-4 sm:p-6 lg:p-8 w-full">
 
                 {/* Dashboard */}
                 {(currentScreen ===
@@ -645,6 +731,8 @@ function AppContent() {
                       treatments
                     }
                     alerts={alerts}
+
+                    userRole={userRole}
                   />
                 )}
 
@@ -810,6 +898,12 @@ function AppContent() {
                     }
                   />
                 )}
+
+                {/* AI Assistant */}
+{currentScreen ===
+  'ai-assistant' && (
+  <AIAssistantScreen />
+)}
 
               </main>
             </div>

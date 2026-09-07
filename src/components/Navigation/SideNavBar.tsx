@@ -187,8 +187,8 @@ export const SideNavBar: React.FC<SideNavBarProps> = ({
             />
             <div className="flex-1 min-w-0">
               <p className="text-xs font-bold text-on-surface truncate">
-                {authUser?.fullName || (userRole === 'farmer' ? 'Rajesh Kumar' : 'Dr. Suresh Kumar')}
-              </p>
+                {userRole === 'farmer' ? 'Rajesh Kumar' : 'Dr. Suresh Kumar'}
+                </p>
               <div className="flex items-center gap-1 text-[10px] text-secondary font-semibold truncate">
                 <UserCheck className="w-3 h-3 text-secondary shrink-0" />
                 <span className="truncate">

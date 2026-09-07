@@ -249,7 +249,7 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({
                   />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-bold text-slate-800 truncate">
-                      {authUser?.fullName || (userRole === 'farmer' ? 'Rajesh Kumar' : 'Dr. Suresh Kumar')}
+                      {userRole === 'farmer' ? 'Rajesh Kumar' : 'Dr. Suresh Kumar'}
                     </p>
                     <p className="text-[11px] font-semibold text-emerald-700 capitalize truncate">
                       {authUser?.role ? authUser.role.replace(/_/g, ' ') : userRole}

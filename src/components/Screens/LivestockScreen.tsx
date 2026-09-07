@@ -61,6 +61,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
   });
 
   const handleCreateAnimal = (e: React.FormEvent) => {
+    
     e.preventDefault();
     const newAnimalObj: Animal = {
       id: `COW-0${Math.floor(Math.random() * 80 + 30)}`,
