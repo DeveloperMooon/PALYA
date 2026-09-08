@@ -47,6 +47,7 @@ import { VeterinaryReviewScreen } from './components/Screens/VeterinaryReviewScr
 import { VeterinaryCaseScreen } from './components/Screens/VeterinaryCaseScreen';
 import { MRLWithdrawalScreen } from './components/Screens/MRLWithdrawalScreen';
 import { LivestockScreen } from './components/Screens/LivestockScreen';
+import { EarlyDetectionScreen } from './components/Screens/EarlyDetectionScreen';
 import { AnimalDetailScreen } from './components/Screens/AnimalDetailScreen';
 import { FarmManagementScreen } from './components/Screens/FarmManagementScreen';
 import { RecordTreatmentScreen } from './components/Screens/RecordTreatmentScreen';
@@ -351,7 +352,59 @@ const loadAnimals = async () => {
     setSelectedVetCase(vetCase);
     setCurrentScreen('veterinary-case');
   };
+const handleCreateVetCaseFromDetection = (
+  animal: Animal,
+  condition: string,
+  risk: 'Low' | 'Medium' | 'High',
+  symptoms: string[]
+) => {
+  const template = INITIAL_VET_CASES[0];
 
+  const newCase = {
+    ...template,
+
+    id: `VET-${Date.now()}`,
+
+    animalId: animal.id,
+    animalTag: animal.tag || animal.id,
+    farm: animal.farmName,
+
+    riskLevel: risk,
+
+    title: condition,
+    condition: condition,
+    suspectedCondition: condition,
+
+    symptoms: symptoms,
+
+    description:
+      `Early detection screening flagged ${condition}. ` +
+      `Observed symptoms: ${symptoms.join(', ')}.`,
+
+    status: 'Pending Review',
+
+    timeline: [
+      {
+        id: `tl-${Date.now()}`,
+        timestamp: 'Just now',
+        title: 'Early Detection Alert Generated',
+        description:
+          `${condition} suspected based on symptoms: ${symptoms.join(', ')}.`,
+        type: 'escalation'
+      },
+      ...(template.timeline || [])
+    ]
+  } as VeterinaryCase;
+
+  setVetCases((prev) => [
+    newCase,
+    ...prev
+  ]);
+
+  setSelectedVetCase(newCase);
+
+  setCurrentScreen('veterinary-review');
+};
   const handleApproveCase = (
     caseId: string
   ) => {
@@ -780,19 +833,14 @@ const handleTagScanned = (tag: string) => {
                   />
                 )}
 
-                {/* Veterinary Review */}
-                {currentScreen ===
-                  'veterinary-review' && (
-                  <VeterinaryReviewScreen
-                    cases={vetCases}
-                    onSelectCase={
-                      handleSelectVetCase
-                    }
-                    onNavigate={
-                      handleNavigate
-                    }
-                  />
-                )}
+  {/* Veterinary Review */}
+{currentScreen === 'veterinary-review' && (
+  <VeterinaryReviewScreen
+    cases={vetCases}
+    onSelectCase={handleSelectVetCase}
+    onNavigate={handleNavigate}
+  />
+)}
 
                 {/* Veterinary Case */}
                 {currentScreen ===
@@ -832,6 +880,21 @@ const handleTagScanned = (tag: string) => {
                     }
                     onRegisterAnimal={
                       handleRegisterAnimal
+                    }
+                  />
+                )}
+
+
+                {/* Early Detection */}
+                {currentScreen ===
+                  'early-detection' && (
+                  <EarlyDetectionScreen
+                    animals={animals}
+                    onSelectAnimal={
+                      handleSelectAnimal
+                    }
+                    onNavigate={
+                      handleNavigate
                     }
                   />
                 )}

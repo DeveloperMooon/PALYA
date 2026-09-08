@@ -18,7 +18,7 @@ import { Animal, ScreenId, TreatmentRecord, AlertItem } from '../../types';
 
 interface FarmerDashboardProps {
   animals: Animal[];
-  onNavigate: (screen: string) => void;
+  onNavigate: (screen: ScreenId) => void;
   onOpenScanModal: () => void;
   onSelectAnimal: (animal: Animal) => void;
   treatments?: TreatmentRecord[];

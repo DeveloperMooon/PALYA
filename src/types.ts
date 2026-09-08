@@ -17,6 +17,7 @@ export type ScreenId =
   | 'lab-result'
   | 'amu'
   | 'stewardship'
+  | 'early-detection'
   | 'alerts'
   | 'veterinary-review'
   | 'veterinary-case'

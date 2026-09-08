@@ -3,6 +3,7 @@ import {
   LayoutDashboard,
   Tractor,
   PawPrint,
+  HeartPulse,
   Stethoscope,
   Timer,
   BarChart3,
@@ -46,38 +47,41 @@ export const SideNavBar: React.FC<SideNavBarProps> = ({
   onClose
 }) => {
   const navItems: {
-    id: ScreenId;
-    label: string;
-    icon: React.ReactNode;
-    badge?: number | string;
-    badgeColor?: string;
-  }[] = [
-    { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
-    { id: 'farm-management', label: 'Farm Management', icon: <Tractor className="w-5 h-5" /> },
-    { id: 'livestock', label: 'Livestock', icon: <PawPrint className="w-5 h-5" /> },
-    { id: 'record-treatment', label: 'Treatments', icon: <Stethoscope className="w-5 h-5" /> },
-    { id: 'mrl', label: 'MRL & Withdrawal', icon: <Timer className="w-5 h-5" /> },
-    { id: 'amu', label: 'AMU Dashboard', icon: <BarChart3 className="w-5 h-5" /> },
-    { id: 'stewardship', label: 'Stewardship Score', icon: <ShieldCheck className="w-5 h-5" /> },
-    {
-      id: 'alerts',
-      label: 'Alerts',
-      icon: <Bell className="w-5 h-5" />,
-      badge: alertCount > 0 ? alertCount : undefined,
-      badgeColor: 'bg-error text-on-error'
-    },
-    {
-      id: 'veterinary-review',
-      label: 'Veterinary Review',
-      icon: <ClipboardCheck className="w-5 h-5" />,
-      badge: userRole === 'veterinarian' ? '5 req' : undefined,
-      badgeColor: 'bg-primary-container text-on-primary-container'
-    },
-    { id: 'analytics', label: 'Analytics', icon: <TrendingUp className="w-5 h-5" /> },
-    { id: 'reports', label: 'Reports', icon: <FileText className="w-5 h-5" /> },
-    { id: 'ai-assistant', label: 'AI Assistant', icon: <Bot className="w-5 h-5" /> },
-    { id: 'settings', label: 'Settings', icon: <Settings className="w-5 h-5" /> },
-  ];
+  id: ScreenId;
+  label: string;
+  icon: React.ReactNode;
+  badge?: number | string;
+  badgeColor?: string;
+}[] = [
+  { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
+  { id: 'farm-management', label: 'Farm Management', icon: <Tractor className="w-5 h-5" /> },
+  { id: 'livestock', label: 'Livestock', icon: <PawPrint className="w-5 h-5" /> },
+
+  { id: 'early-detection', label: 'Early Detection', icon: <HeartPulse className="w-5 h-5" /> },
+
+  { id: 'record-treatment', label: 'Treatments', icon: <Stethoscope className="w-5 h-5" /> },
+  { id: 'mrl', label: 'MRL & Withdrawal', icon: <Timer className="w-5 h-5" /> },
+  { id: 'amu', label: 'AMU Dashboard', icon: <BarChart3 className="w-5 h-5" /> },
+  { id: 'stewardship', label: 'Stewardship Score', icon: <ShieldCheck className="w-5 h-5" /> },
+  {
+    id: 'alerts',
+    label: 'Alerts',
+    icon: <Bell className="w-5 h-5" />,
+    badge: alertCount > 0 ? alertCount : undefined,
+    badgeColor: 'bg-error text-on-error'
+  },
+  {
+    id: 'veterinary-review',
+    label: 'Veterinary Review',
+    icon: <ClipboardCheck className="w-5 h-5" />,
+    badge: userRole === 'veterinarian' ? '5 req' : undefined,
+    badgeColor: 'bg-primary-container text-on-primary-container'
+  },
+  { id: 'analytics', label: 'Analytics', icon: <TrendingUp className="w-5 h-5" /> },
+  { id: 'reports', label: 'Reports', icon: <FileText className="w-5 h-5" /> },
+  { id: 'ai-assistant', label: 'AI Assistant', icon: <Bot className="w-5 h-5" /> },
+  { id: 'settings', label: 'Settings', icon: <Settings className="w-5 h-5" /> },
+];
 
   const handleItemClick = (screenId: ScreenId) => {
     onNavigate(screenId);
