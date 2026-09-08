@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import {
   AlertTriangle,
   AlertCircle,
@@ -40,7 +40,7 @@ export const SmartAlertsScreen: React.FC<SmartAlertsScreenProps> = ({
 
   // "Acknowledge" abhi sirf is session ke liye local hai
   // (backend mein alerts save nahi hote, khud-ba-khud calculate hote hain
-  // treatments data se — isliye "reviewed" state permanently store karne ka
+  // treatments data se â€” isliye "reviewed" state permanently store karne ka
   // koi table nahi hai. Future improvement: alerts_reviewed table banake yahan wire karna)
   const [reviewedIds, setReviewedIds] = useState<Set<string>>(new Set());
 
@@ -82,7 +82,7 @@ export const SmartAlertsScreen: React.FC<SmartAlertsScreenProps> = ({
       case 'critical':
         return 'bg-error-container text-error border-error/30';
       case 'warning':
-        return 'bg-amber-100 text-amber-900 border-amber-300';
+        return 'bg-surface-container text-on-surface border-outline-variant';
       case 'action_required':
         return 'bg-blue-100 text-blue-900 border-blue-300';
       case 'review_required':
@@ -95,7 +95,7 @@ export const SmartAlertsScreen: React.FC<SmartAlertsScreenProps> = ({
       case 'critical':
         return <AlertCircle className="w-5 h-5 text-error" />;
       case 'warning':
-        return <Clock className="w-5 h-5 text-amber-700" />;
+        return <Clock className="w-5 h-5 text-secondary" />;
       case 'action_required':
         return <FileQuestion className="w-5 h-5 text-blue-700" />;
       case 'review_required':
@@ -130,7 +130,7 @@ export const SmartAlertsScreen: React.FC<SmartAlertsScreenProps> = ({
       </div>
 
       {error && (
-        <div className="p-4 rounded-xl bg-amber-100 border border-amber-300 text-amber-950 text-xs font-semibold">
+        <div className="p-4 rounded-xl bg-surface-container border border-outline-variant text-on-surface text-xs font-semibold">
           {error}. Backend chal raha hai check karo.
         </div>
       )}
@@ -159,10 +159,10 @@ export const SmartAlertsScreen: React.FC<SmartAlertsScreenProps> = ({
         <button
           onClick={() => setActiveFilter('warning')}
           className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-            activeFilter === 'warning' ? 'bg-amber-600 text-white shadow-xs' : 'bg-surface-container hover:bg-surface-container-high text-amber-800'
+            activeFilter === 'warning' ? 'bg-amber-600 text-white shadow-xs' : 'bg-surface-container hover:bg-surface-container-high text-on-surface-variant'
           }`}
         >
-          <span className="w-2 h-2 rounded-full bg-amber-500" />
+          <span className="w-2 h-2 rounded-full bg-surface-container0" />
           Warnings ({alerts.filter((a) => a.type === 'warning').length})
         </button>
 
@@ -206,7 +206,7 @@ export const SmartAlertsScreen: React.FC<SmartAlertsScreenProps> = ({
                           {alert.type.replace('_', ' ')}
                         </span>
                         <h2 className="text-base font-bold text-primary">{alert.title}</h2>
-                        <span className="text-xs text-outline font-medium">• {alert.animalId}</span>
+                        <span className="text-xs text-outline font-medium">â€¢ {alert.animalId}</span>
                       </div>
 
                       <p className="text-xs text-on-surface mt-2 leading-relaxed max-w-2xl">

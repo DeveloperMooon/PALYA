@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   Plus,
   Search,
@@ -119,15 +119,15 @@ export function FarmerDashboard({
         </div>
 
         {/* Under Withdrawal */}
-        <div className="bg-surface-container-lowest p-4 rounded-xl border border-amber-500/30 bg-amber-50/20 shadow-xs">
-          <p className="text-xs font-bold text-amber-900 uppercase tracking-wider flex items-center justify-between">
+        <div className="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant bg-surface-container shadow-xs">
+          <p className="text-xs font-bold text-on-surface uppercase tracking-wider flex items-center justify-between">
             <span>Under Withdrawal</span>
-            <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-surface-container0 animate-pulse" />
           </p>
           <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-3xl font-black text-amber-600">{underWithdrawalCount}</span>
+            <span className="text-3xl font-black text-secondary">{underWithdrawalCount}</span>
           </div>
-          <p className="text-[11px] text-amber-800 mt-1 font-medium">Milk/meat withheld</p>
+          <p className="text-[11px] text-on-surface-variant mt-1 font-medium">Milk/meat withheld</p>
         </div>
 
         {/* Healthy */}
@@ -270,7 +270,7 @@ export function FarmerDashboard({
                               : animal.healthStatus === 'High Risk'
                               ? 'bg-error-container text-error'
                               : animal.healthStatus === 'Monitoring'
-                              ? 'bg-amber-100 text-amber-800'
+                              ? 'bg-surface-container text-on-surface-variant'
                               : 'bg-blue-100 text-blue-800'
                           }`}
                         >
@@ -280,8 +280,8 @@ export function FarmerDashboard({
 
                       <td className="py-3 px-3">
                         {animal.withdrawalStatus === 'Active' ? (
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-900">
-                            <Clock className="w-3 h-3 text-amber-700" />
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-surface-container text-on-surface">
+                            <Clock className="w-3 h-3 text-secondary" />
                             Active ({animal.withdrawalDaysLeft}d)
                           </span>
                         ) : animal.withdrawalStatus === 'Clear' ? (
@@ -419,14 +419,14 @@ export function FarmerDashboard({
               {/* Warning Alert */}
               <div 
                 onClick={() => onNavigate('alerts')}
-                className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 transition-colors cursor-pointer"
+                className="p-3 rounded-xl bg-surface-container0/10 border border-outline-variant hover:bg-surface-container transition-colors cursor-pointer"
               >
-                <div className="flex items-center justify-between text-xs font-bold text-amber-900 mb-1">
+                <div className="flex items-center justify-between text-xs font-bold text-on-surface mb-1">
                   <span className="flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5 text-amber-700" />
+                    <Clock className="w-3.5 h-3.5 text-secondary" />
                     Repeated AMU - Pen B
                   </span>
-                  <span className="text-[10px] text-amber-800">Yesterday</span>
+                  <span className="text-[10px] text-on-surface-variant">Yesterday</span>
                 </div>
                 <p className="text-xs text-on-surface-variant">
                   3 treatments in 30 days detected. Review with veterinarian.
@@ -466,3 +466,4 @@ export function FarmerDashboard({
     </div>
   );
 };
+

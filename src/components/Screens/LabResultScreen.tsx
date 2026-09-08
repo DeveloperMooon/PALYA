@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import {
   FlaskConical,
   CheckCircle2,
@@ -154,9 +154,9 @@ export const LabResultScreen: React.FC<LabResultScreenProps> = ({
     }
     if (status === 'warning') {
       return {
-        label: 'Warning — Close to Limit',
+        label: 'Warning â€” Close to Limit',
         icon: AlertTriangle,
-        classes: 'bg-amber-100 text-amber-800 border-amber-300',
+        classes: 'bg-surface-container text-on-surface-variant border-outline-variant',
       };
     }
     return {
@@ -173,14 +173,14 @@ export const LabResultScreen: React.FC<LabResultScreenProps> = ({
           Add Lab Test Result
         </h1>
         <p className="text-sm text-on-surface-variant mt-1">
-          Kisi treatment ka residue lab-test value enter karo — system automatically MRL ke against compare karega.
+          Kisi treatment ka residue lab-test value enter karo â€” system automatically MRL ke against compare karega.
         </p>
       </div>
 
       <div className="max-w-2xl bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/60 shadow-xs space-y-5">
 
         {treatmentsError && (
-          <div className="p-3 rounded-xl bg-amber-100 border border-amber-300 text-amber-950 text-xs font-semibold flex items-center gap-2">
+          <div className="p-3 rounded-xl bg-surface-container border border-outline-variant text-on-surface text-xs font-semibold flex items-center gap-2">
             <AlertTriangle className="w-4 h-4 shrink-0" />
             {treatmentsError}
           </div>
@@ -208,7 +208,7 @@ export const LabResultScreen: React.FC<LabResultScreenProps> = ({
               )}
               {treatments.map((t) => (
                 <option key={t.id} value={t.id}>
-                  #{t.id} — {t.animal_id} — {t.drug} (Last dose: {t.last_dose_date})
+                  #{t.id} â€” {t.animal_id} â€” {t.drug} (Last dose: {t.last_dose_date})
                   {t.detected_residue !== null ? ' [Test already recorded]' : ''}
                 </option>
               ))}
@@ -220,7 +220,7 @@ export const LabResultScreen: React.FC<LabResultScreenProps> = ({
               <p><strong>Drug:</strong> {selectedTreatment.drug} ({selectedTreatment.active_ingredient})</p>
               <p><strong>Animal:</strong> {selectedTreatment.animal_id}</p>
               {selectedTreatment.detected_residue !== null && (
-                <p className="text-amber-700">
+                <p className="text-secondary">
                   <strong>Note:</strong> Is treatment ka pehle se ek result save hai ({selectedTreatment.detected_residue}). Naya save karne se woh overwrite ho jayega.
                 </p>
               )}

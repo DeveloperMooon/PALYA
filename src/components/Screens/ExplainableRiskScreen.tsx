@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import {
   ShieldCheck,
   CheckCircle2,
@@ -76,7 +76,7 @@ export const ExplainableRiskScreen: React.FC<ExplainableRiskScreenProps> = ({
 
           <div className="flex justify-between text-[11px] font-bold text-outline mt-2">
             <span className="text-error">0 - High Risk</span>
-            <span className="text-amber-600">50 - Moderate Risk</span>
+            <span className="text-secondary">50 - Moderate Risk</span>
             <span className="text-emerald-700">100 - Optimal Stewardship</span>
           </div>
         </div>
@@ -189,15 +189,15 @@ export const ExplainableRiskScreen: React.FC<ExplainableRiskScreenProps> = ({
               </div>
 
               {/* Risk 2: Pen 4 AMU Concentration */}
-              <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-2">
+              <div className="p-4 rounded-xl bg-surface-container0/10 border border-outline-variant space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-black text-amber-900">Elevated AMU Concentration</span>
-                    <span className="text-[10px] font-black bg-amber-200 text-amber-900 px-1.5 py-0.5 rounded">
+                    <span className="text-xs font-black text-on-surface">Elevated AMU Concentration</span>
+                    <span className="text-[10px] font-black bg-surface-container-high text-on-surface px-1.5 py-0.5 rounded">
                       -6 pts
                     </span>
                   </div>
-                  <span className="text-[11px] font-bold text-amber-800">Pen 4 (Lactating Shed)</span>
+                  <span className="text-[11px] font-bold text-on-surface-variant">Pen 4 (Lactating Shed)</span>
                 </div>
                 <p className="text-xs text-on-surface leading-relaxed">
                   Pen 4 antimicrobial administration density is 28% higher than the overall farm benchmark, indicating possible environmental contamination or localized pathogen transmission.
@@ -243,3 +243,4 @@ export const ExplainableRiskScreen: React.FC<ExplainableRiskScreenProps> = ({
     </div>
   );
 };
+

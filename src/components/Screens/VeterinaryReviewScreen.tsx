@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import {
   ClipboardCheck,
   AlertCircle,
@@ -72,12 +72,12 @@ export const VeterinaryReviewScreen: React.FC<VeterinaryReviewScreenProps> = ({
         </div>
 
         {/* Active Withdrawals */}
-        <div className="bg-surface-container-lowest p-4 rounded-xl border border-amber-500/30 shadow-xs">
-          <p className="text-xs font-bold text-amber-900 uppercase tracking-wider">
+        <div className="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-xs">
+          <p className="text-xs font-bold text-on-surface uppercase tracking-wider">
             Active Withdrawals
           </p>
-          <div className="mt-2 text-3xl font-black text-amber-700">2</div>
-          <p className="text-[11px] text-amber-800 mt-1">Under supervision</p>
+          <div className="mt-2 text-3xl font-black text-secondary">2</div>
+          <p className="text-[11px] text-on-surface-variant mt-1">Under supervision</p>
         </div>
 
         {/* Repeated AMU Cases */}
@@ -132,7 +132,7 @@ export const VeterinaryReviewScreen: React.FC<VeterinaryReviewScreenProps> = ({
                     </div>
 
                     <p className="text-xs text-on-surface-variant">
-                      {vetCase.species} • {vetCase.breed} • {vetCase.age} • {vetCase.weight} kg
+                      {vetCase.species} â€¢ {vetCase.breed} â€¢ {vetCase.age} â€¢ {vetCase.weight} kg
                     </p>
 
                     <p className="text-xs font-semibold text-primary mt-1 flex items-center gap-1">
@@ -145,7 +145,7 @@ export const VeterinaryReviewScreen: React.FC<VeterinaryReviewScreenProps> = ({
                         className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${
                           vetCase.riskLevel === 'High'
                             ? 'bg-error-container text-error'
-                            : 'bg-amber-100 text-amber-900'
+                            : 'bg-surface-container text-on-surface'
                         }`}
                       >
                         {vetCase.riskLevel} Risk
@@ -174,8 +174,8 @@ export const VeterinaryReviewScreen: React.FC<VeterinaryReviewScreenProps> = ({
                   <div className="p-2.5 rounded-xl bg-surface-container-low flex items-center justify-between">
                     <span className="text-outline font-medium">Withdrawal Status:</span>
                     {vetCase.withdrawalStatus === 'Active' ? (
-                      <span className="font-bold text-amber-800 flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5 text-amber-600" />
+                      <span className="font-bold text-on-surface-variant flex items-center gap-1">
+                        <Clock className="w-3.5 h-3.5 text-secondary" />
                         Active ({vetCase.withdrawalDaysLeft} days remaining)
                       </span>
                     ) : (
@@ -190,7 +190,7 @@ export const VeterinaryReviewScreen: React.FC<VeterinaryReviewScreenProps> = ({
                     <span className="text-outline font-medium">Stewardship Impact:</span>
                     <span
                       className={`font-bold ${
-                        vetCase.stewardshipImpact === 'Negative' ? 'text-error' : 'text-amber-800'
+                        vetCase.stewardshipImpact === 'Negative' ? 'text-error' : 'text-on-surface-variant'
                       }`}
                     >
                       {vetCase.stewardshipImpact}
@@ -217,3 +217,4 @@ export const VeterinaryReviewScreen: React.FC<VeterinaryReviewScreenProps> = ({
     </div>
   );
 };
+

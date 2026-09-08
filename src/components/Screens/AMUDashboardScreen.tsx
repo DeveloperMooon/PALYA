@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import {
   Download,
   CheckCircle2,
@@ -44,7 +44,7 @@ export const AMUDashboardScreen: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // Page load hote hi real data mangwao — summary + full treatments list
+  // Page load hote hi real data mangwao â€” summary + full treatments list
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -104,26 +104,26 @@ export const AMUDashboardScreen: React.FC = () => {
         <div className="p-3 bg-secondary-container text-on-secondary-container rounded-xl text-xs font-bold flex items-center justify-between shadow-md">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4" />
-            <span>Export not wired to a real file yet — this is a placeholder action.</span>
+            <span>Export not wired to a real file yet â€” this is a placeholder action.</span>
           </div>
         </div>
       )}
 
       {error && (
-        <div className="p-4 rounded-xl bg-amber-100 border border-amber-300 text-amber-950 flex items-center gap-3">
+        <div className="p-4 rounded-xl bg-surface-container border border-outline-variant text-on-surface flex items-center gap-3">
           <AlertTriangle className="w-5 h-5 shrink-0" />
           <p className="text-xs font-semibold">{error}. Backend chal raha hai check karo.</p>
         </div>
       )}
 
-      {/* KPI Cards — sirf wahi jo real data se calculate ho sakte hain */}
+      {/* KPI Cards â€” sirf wahi jo real data se calculate ho sakte hain */}
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
         <div className="bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/60 shadow-xs">
           <span className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">
             Total Treatments
           </span>
           <div className="mt-2 text-3xl font-black text-primary">
-            {loading ? '—' : summary?.totalAllTreatments ?? 0}
+            {loading ? 'â€”' : summary?.totalAllTreatments ?? 0}
           </div>
           <p className="text-xs text-on-surface-variant mt-1">All recorded treatments</p>
         </div>
@@ -133,7 +133,7 @@ export const AMUDashboardScreen: React.FC = () => {
             Antibiotic Treatments
           </span>
           <div className="mt-2 text-3xl font-black text-secondary">
-            {loading ? '—' : summary?.totalAntibioticTreatments ?? 0}
+            {loading ? 'â€”' : summary?.totalAntibioticTreatments ?? 0}
           </div>
           <p className="text-xs text-on-surface-variant mt-1">Category = Antibiotic</p>
         </div>
@@ -143,7 +143,7 @@ export const AMUDashboardScreen: React.FC = () => {
             Most Used Drug
           </span>
           <div className="mt-2 text-xl font-black text-primary truncate">
-            {loading ? '—' : summary?.mostUsedDrug?.drug ?? 'No data yet'}
+            {loading ? 'â€”' : summary?.mostUsedDrug?.drug ?? 'No data yet'}
           </div>
           <p className="text-xs text-on-surface-variant mt-1">
             {summary?.mostUsedDrug ? `${summary.mostUsedDrug.count} times (${summary.mostUsedDrug.percentage}%)` : ''}
@@ -152,7 +152,7 @@ export const AMUDashboardScreen: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Monthly Trend — real counts, simple bar list (no fake curve) */}
+        {/* Monthly Trend â€” real counts, simple bar list (no fake curve) */}
         <div className="lg:col-span-6 bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/60 shadow-xs">
           <h2 className="text-base font-bold text-primary pb-3 border-b border-outline-variant/40">
             Monthly Antibiotic Usage
@@ -181,7 +181,7 @@ export const AMUDashboardScreen: React.FC = () => {
           </div>
         </div>
 
-        {/* Drug Breakdown — real percentages, simple list (no fake donut) */}
+        {/* Drug Breakdown â€” real percentages, simple list (no fake donut) */}
         <div className="lg:col-span-6 bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/60 shadow-xs">
           <h2 className="text-base font-bold text-primary pb-3 border-b border-outline-variant/40">
             Drug-wise Breakdown
@@ -202,7 +202,7 @@ export const AMUDashboardScreen: React.FC = () => {
         </div>
       </div>
 
-      {/* Recent Antimicrobial Treatments Table — ab Supabase se */}
+      {/* Recent Antimicrobial Treatments Table â€” ab Supabase se */}
       <div className="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/60 shadow-xs">
         <h2 className="text-base font-bold text-primary pb-4 border-b border-outline-variant/40">
           Recent Antimicrobial Treatments
@@ -243,8 +243,8 @@ export const AMUDashboardScreen: React.FC = () => {
                   <td className="py-3 px-3 font-semibold text-on-surface">{trt.withdrawal_days} Days</td>
                   <td className="py-3 px-3 text-right">
                     {trt.status === 'Active' ? (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-900">
-                        <Clock className="w-3 h-3 text-amber-700" />
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-surface-container text-on-surface">
+                        <Clock className="w-3 h-3 text-secondary" />
                         Active
                       </span>
                     ) : (

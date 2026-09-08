@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 
 import {
   ScreenId,
@@ -80,7 +80,7 @@ function AppContent() {
   //
   // FIX: pehle yahan ek tootha hua "=> { ... }" block latka hua tha
   // jo useState() ke turant baad, bina kisi function se juda hue, likha
-  // tha — ye invalid JavaScript syntax thi aur isi wajah se poori app
+  // tha â€” ye invalid JavaScript syntax thi aur isi wajah se poori app
   // compile hi nahi ho pa rahi thi (LandingScreen bilkul sahi tha).
   // Neeche do useEffect (URL hash sync + auth guard) already yehi kaam
   // sambhal lete hain, isliye ye simple useState hi kaafi hai.

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   ArrowLeft,
   Clock,
@@ -72,14 +72,14 @@ export const AnimalDetailScreen: React.FC<AnimalDetailScreenProps> = ({
                       ? 'bg-emerald-100 text-emerald-800'
                       : animal.healthStatus === 'High Risk'
                       ? 'bg-error-container text-error'
-                      : 'bg-amber-100 text-amber-900'
+                      : 'bg-surface-container text-on-surface'
                   }`}
                 >
                   {animal.healthStatus}
                 </span>
 
                 {animal.withdrawalStatus === 'Active' && (
-                  <span className="text-[11px] font-black px-2.5 py-0.5 rounded-full bg-amber-500 text-white flex items-center gap-1 shadow-xs">
+                  <span className="text-[11px] font-black px-2.5 py-0.5 rounded-full bg-surface-container0 text-white flex items-center gap-1 shadow-xs">
                     <Clock className="w-3.5 h-3.5" />
                     Withdrawal Active ({animal.withdrawalDaysLeft}d)
                   </span>
@@ -87,7 +87,7 @@ export const AnimalDetailScreen: React.FC<AnimalDetailScreenProps> = ({
               </div>
 
               <p className="text-xs text-on-surface-variant mt-1.5">
-                {animal.species} • {animal.breed} • {animal.gender} • {animal.age} • {animal.weight} kg
+                {animal.species} â€¢ {animal.breed} â€¢ {animal.gender} â€¢ {animal.age} â€¢ {animal.weight} kg
               </p>
 
               <p className="text-xs text-primary font-bold mt-1">
@@ -159,17 +159,17 @@ export const AnimalDetailScreen: React.FC<AnimalDetailScreenProps> = ({
           <div className="lg:col-span-7 space-y-6">
             {/* Withdrawal status card */}
             {animal.withdrawalStatus === 'Active' ? (
-              <div className="bg-amber-500/10 border border-amber-500/30 p-5 rounded-2xl space-y-2">
+              <div className="bg-surface-container0/10 border border-outline-variant p-5 rounded-2xl space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-black uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
-                    <Clock className="w-4 h-4 text-amber-700" />
+                  <span className="text-xs font-black uppercase tracking-wider text-on-surface flex items-center gap-1.5">
+                    <Clock className="w-4 h-4 text-secondary" />
                     Active Withdrawal Period
                   </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-amber-200 text-amber-950 font-black text-xs">
+                  <span className="px-2.5 py-0.5 rounded-full bg-surface-container-high text-on-surface font-black text-xs">
                     {animal.withdrawalDaysLeft} Days Remaining
                   </span>
                 </div>
-                <p className="text-xs text-amber-950 leading-relaxed">
+                <p className="text-xs text-on-surface leading-relaxed">
                   Food safety withholding active following recent antimicrobial therapy. Milk must not enter the bulk milk tank or commercial cold chain.
                 </p>
               </div>
@@ -208,7 +208,7 @@ export const AnimalDetailScreen: React.FC<AnimalDetailScreenProps> = ({
                           <span className="text-[10px] text-outline font-mono">({trt.activeIngredient})</span>
                         </div>
                         <p className="text-on-surface-variant mt-1">
-                          {trt.condition} • {trt.dosage} ({trt.route})
+                          {trt.condition} â€¢ {trt.dosage} ({trt.route})
                         </p>
                       </div>
 
@@ -217,7 +217,7 @@ export const AnimalDetailScreen: React.FC<AnimalDetailScreenProps> = ({
                         <span
                           className={`inline-block mt-0.5 px-2 py-0.5 rounded text-[10px] font-black ${
                             trt.status === 'Active'
-                              ? 'bg-amber-100 text-amber-900'
+                              ? 'bg-surface-container text-on-surface'
                               : 'bg-emerald-100 text-emerald-800'
                           }`}
                         >
@@ -248,7 +248,7 @@ export const AnimalDetailScreen: React.FC<AnimalDetailScreenProps> = ({
                     <Thermometer className="w-4 h-4 text-secondary" />
                     <span className="text-on-surface-variant">Body Temperature</span>
                   </div>
-                  <span className="font-black text-primary text-sm">38.6 °C (Normal)</span>
+                  <span className="font-black text-primary text-sm">38.6 Â°C (Normal)</span>
                 </div>
 
                 <div className="p-3 rounded-xl bg-surface-container-low flex items-center justify-between">
@@ -264,7 +264,7 @@ export const AnimalDetailScreen: React.FC<AnimalDetailScreenProps> = ({
                     <Activity className="w-4 h-4 text-secondary" />
                     <span className="text-on-surface-variant">Somatic Cell Count (SCC)</span>
                   </div>
-                  <span className="font-black text-amber-700 text-sm">380k / ml (Elevated)</span>
+                  <span className="font-black text-secondary text-sm">380k / ml (Elevated)</span>
                 </div>
               </div>
             </div>
@@ -303,7 +303,7 @@ export const AnimalDetailScreen: React.FC<AnimalDetailScreenProps> = ({
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="text-sm font-bold text-primary">{trt.drug}</h3>
-                    <p className="text-xs text-on-surface-variant">{trt.activeIngredient} • {trt.dosage} ({trt.route})</p>
+                    <p className="text-xs text-on-surface-variant">{trt.activeIngredient} â€¢ {trt.dosage} ({trt.route})</p>
                     <p className="text-xs text-outline mt-1">Condition: {trt.condition}</p>
                     {trt.symptoms && <p className="text-xs text-outline">Notes: {trt.symptoms}</p>}
                   </div>
@@ -371,7 +371,7 @@ export const AnimalDetailScreen: React.FC<AnimalDetailScreenProps> = ({
             </div>
 
             <div className="text-xs font-mono font-bold text-primary mb-4">
-              {animal.id} • {animal.tag}
+              {animal.id} â€¢ {animal.tag}
             </div>
 
             <button
@@ -386,3 +386,4 @@ export const AnimalDetailScreen: React.FC<AnimalDetailScreenProps> = ({
     </div>
   );
 };
+

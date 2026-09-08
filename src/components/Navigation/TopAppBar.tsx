@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   Search,
   Bell,
@@ -255,7 +255,7 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({
                       {authUser?.role ? authUser.role.replace(/_/g, ' ') : userRole}
                     </p>
                     <div className="flex items-center gap-1 text-[10px] text-slate-400 mt-0.5">
-                      <span className={`w-1.5 h-1.5 rounded-full ${authUser?.kycStatus === 'verified' ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                      <span className={`w-1.5 h-1.5 rounded-full ${authUser?.kycStatus === 'verified' ? 'bg-emerald-500' : 'bg-surface-container0'}`} />
                       <span>{authUser?.kycStatus === 'verified' ? 'KYC: Verified' : 'KYC: Pending'}</span>
                     </div>
                   </div>

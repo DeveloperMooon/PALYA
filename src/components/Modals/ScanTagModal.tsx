@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import {
   X,
   QrCode,
@@ -186,7 +186,7 @@ export const ScanTagModal: React.FC<ScanTagModalProps> = ({
 
                 <div className="mt-2 text-xs text-on-surface-variant space-y-1">
                   <p>
-                    <strong className="text-on-surface">Breed / Age:</strong> {selectedAnimal.breed} ({selectedAnimal.age}) • {selectedAnimal.weight} kg
+                    <strong className="text-on-surface">Breed / Age:</strong> {selectedAnimal.breed} ({selectedAnimal.age}) â€¢ {selectedAnimal.weight} kg
                   </p>
                   <p>
                     <strong className="text-on-surface">Farm:</strong> {selectedAnimal.farmName}
@@ -197,9 +197,9 @@ export const ScanTagModal: React.FC<ScanTagModalProps> = ({
                 </div>
 
                 {selectedAnimal.withdrawalStatus === 'Active' && (
-                  <div className="mt-3 p-2 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-between text-xs text-amber-900">
+                  <div className="mt-3 p-2 rounded-lg bg-surface-container0/10 border border-outline-variant flex items-center justify-between text-xs text-on-surface">
                     <div className="flex items-center gap-1.5 font-bold">
-                      <Clock className="w-4 h-4 text-amber-700" />
+                      <Clock className="w-4 h-4 text-secondary" />
                       <span>{selectedAnimal.withdrawalDaysLeft} Days Remaining in Withdrawal</span>
                     </div>
                     <span className="font-semibold text-[11px]">Clearance: {selectedAnimal.clearanceDate}</span>
@@ -254,3 +254,4 @@ export const ScanTagModal: React.FC<ScanTagModalProps> = ({
     </div>
   );
 };
+

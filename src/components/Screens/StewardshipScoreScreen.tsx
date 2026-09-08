@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import {
   TrendingUp,
   AlertTriangle,
@@ -56,7 +56,7 @@ export const StewardshipScoreScreen: React.FC<StewardshipScoreScreenProps> = ({ 
   const ratingColor =
     data?.rating === 'Excellent' ? 'bg-emerald-100 text-emerald-800' :
     data?.rating === 'Good' ? 'bg-secondary-container text-on-secondary-container' :
-    data?.rating === 'Needs Attention' ? 'bg-amber-100 text-amber-900' :
+    data?.rating === 'Needs Attention' ? 'bg-surface-container text-on-surface' :
     'bg-red-100 text-red-800';
 
   return (
@@ -74,7 +74,7 @@ export const StewardshipScoreScreen: React.FC<StewardshipScoreScreenProps> = ({ 
       </div>
 
       {error && (
-        <div className="p-4 rounded-xl bg-amber-100 border border-amber-300 text-amber-950 text-xs font-semibold">
+        <div className="p-4 rounded-xl bg-surface-container border border-outline-variant text-on-surface text-xs font-semibold">
           {error}. Backend chal raha hai check karo.
         </div>
       )}
@@ -97,7 +97,7 @@ export const StewardshipScoreScreen: React.FC<StewardshipScoreScreenProps> = ({ 
                 />
               </svg>
               <div className="absolute flex flex-col items-center justify-center">
-                <span className="text-5xl font-black text-primary">{loading ? '—' : score}</span>
+                <span className="text-5xl font-black text-primary">{loading ? 'â€”' : score}</span>
                 <span className="text-xs font-bold text-on-surface-variant">/ 100</span>
               </div>
             </div>
@@ -129,34 +129,34 @@ export const StewardshipScoreScreen: React.FC<StewardshipScoreScreenProps> = ({ 
             )}
 
             {data && (data.factors.mrlViolations > 0 || data.factors.mrlWarnings > 0 || data.factors.repeatedTreatments > 0 || data.factors.activeWithdrawals > 0) && (
-              <div className="p-4 rounded-xl bg-amber-50/70 border border-amber-200">
-                <h3 className="text-xs font-black text-amber-900 uppercase tracking-wider flex items-center gap-1.5 mb-2">
-                  <AlertTriangle className="w-4 h-4 text-amber-700" />
+              <div className="p-4 rounded-xl bg-surface-container/70 border border-outline-variant">
+                <h3 className="text-xs font-black text-on-surface uppercase tracking-wider flex items-center gap-1.5 mb-2">
+                  <AlertTriangle className="w-4 h-4 text-secondary" />
                   Factors Reducing Score
                 </h3>
-                <ul className="space-y-1.5 text-xs text-amber-950 font-medium">
+                <ul className="space-y-1.5 text-xs text-on-surface font-medium">
                   {data.factors.mrlViolations > 0 && (
                     <li className="flex items-center justify-between">
                       <span>MRL Violations</span>
-                      <span className="font-bold">{data.factors.mrlViolations} × -15</span>
+                      <span className="font-bold">{data.factors.mrlViolations} Ã— -15</span>
                     </li>
                   )}
                   {data.factors.mrlWarnings > 0 && (
                     <li className="flex items-center justify-between">
                       <span>MRL Warnings</span>
-                      <span className="font-bold">{data.factors.mrlWarnings} × -5</span>
+                      <span className="font-bold">{data.factors.mrlWarnings} Ã— -5</span>
                     </li>
                   )}
                   {data.factors.repeatedTreatments > 0 && (
                     <li className="flex items-center justify-between">
                       <span>Repeated Treatments (30 days)</span>
-                      <span className="font-bold">{data.factors.repeatedTreatments} × -10</span>
+                      <span className="font-bold">{data.factors.repeatedTreatments} Ã— -10</span>
                     </li>
                   )}
                   {data.factors.activeWithdrawals > 0 && (
                     <li className="flex items-center justify-between">
                       <span>Active Withdrawals</span>
-                      <span className="font-bold">{data.factors.activeWithdrawals} × -2</span>
+                      <span className="font-bold">{data.factors.activeWithdrawals} Ã— -2</span>
                     </li>
                   )}
                 </ul>

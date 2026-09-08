@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   Building2,
   MapPin,
@@ -51,7 +51,7 @@ export const FarmManagementScreen: React.FC<FarmManagementScreenProps> = ({
 
               <p className="text-xs text-on-surface-variant mt-1.5 flex items-center gap-1">
                 <MapPin className="w-3.5 h-3.5 text-outline" />
-                <span>Meerut, Uttar Pradesh • Pin: 250404 • Managed by Rajesh Kumar</span>
+                <span>Meerut, Uttar Pradesh â€¢ Pin: 250404 â€¢ Managed by Rajesh Kumar</span>
               </p>
             </div>
           </div>
@@ -91,14 +91,14 @@ export const FarmManagementScreen: React.FC<FarmManagementScreenProps> = ({
 
           <div className="p-3 rounded-xl bg-surface-container-low">
             <span className="text-[11px] font-bold text-outline uppercase block">Under Treatment</span>
-            <span className="text-2xl font-black text-amber-600 mt-1 block">3</span>
+            <span className="text-2xl font-black text-secondary mt-1 block">3</span>
             <span className="text-[10px] text-on-surface-variant">Active care</span>
           </div>
 
-          <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20">
-            <span className="text-[11px] font-bold text-amber-900 uppercase block">Withdrawal Active</span>
-            <span className="text-2xl font-black text-amber-700 mt-1 block">2</span>
-            <span className="text-[10px] text-amber-800 font-semibold">Withheld</span>
+          <div className="p-3 rounded-xl bg-surface-container0/10 border border-outline-variant">
+            <span className="text-[11px] font-bold text-on-surface uppercase block">Withdrawal Active</span>
+            <span className="text-2xl font-black text-secondary mt-1 block">2</span>
+            <span className="text-[10px] text-on-surface-variant font-semibold">Withheld</span>
           </div>
 
           <div className="p-3 rounded-xl bg-surface-container-low">
@@ -152,7 +152,7 @@ export const FarmManagementScreen: React.FC<FarmManagementScreenProps> = ({
                   cx="50"
                   cy="50"
                   r="38"
-                  stroke="#d97706"
+                  stroke="#006c49"
                   strokeWidth="16"
                   strokeDasharray={`${5 * 2.38} 238.7`}
                   strokeDashoffset={`${-(79 + 8) * 2.38}`}
@@ -186,7 +186,7 @@ export const FarmManagementScreen: React.FC<FarmManagementScreenProps> = ({
                 <span className="text-on-surface">Monitoring: <strong>2</strong></span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#d97706]" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#006c49]" />
                 <span className="text-on-surface">Under Treatment: <strong>1</strong></span>
               </div>
               <div className="flex items-center gap-2">
@@ -244,15 +244,15 @@ export const FarmManagementScreen: React.FC<FarmManagementScreenProps> = ({
       </div>
 
       {/* Active Alerts Banner */}
-      <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <div className="p-4 rounded-2xl bg-surface-container0/10 border border-outline-variant flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <AlertTriangle className="w-5 h-5 text-amber-700 shrink-0" />
+          <AlertTriangle className="w-5 h-5 text-secondary shrink-0" />
           <div>
-            <p className="text-xs font-bold text-amber-900">
+            <p className="text-xs font-bold text-on-surface">
               Active Alerts for Shiv Dairy Farm: 2 Animals with Special Attention
             </p>
-            <p className="text-xs text-amber-950 mt-0.5">
-              COW-024 (Withdrawal Active - 5 days left) • COW-018 (Repeated Treatment Alert)
+            <p className="text-xs text-on-surface mt-0.5">
+              COW-024 (Withdrawal Active - 5 days left) â€¢ COW-018 (Repeated Treatment Alert)
             </p>
           </div>
         </div>
@@ -319,7 +319,7 @@ export const FarmManagementScreen: React.FC<FarmManagementScreenProps> = ({
                           ? 'bg-emerald-100 text-emerald-800'
                           : a.healthStatus === 'High Risk'
                           ? 'bg-error-container text-error'
-                          : 'bg-amber-100 text-amber-800'
+                          : 'bg-surface-container text-on-surface-variant'
                       }`}
                     >
                       {a.healthStatus}
@@ -327,8 +327,8 @@ export const FarmManagementScreen: React.FC<FarmManagementScreenProps> = ({
                   </td>
                   <td className="py-3 px-3">
                     {a.withdrawalStatus === 'Active' ? (
-                      <span className="text-amber-800 font-bold flex items-center gap-1">
-                        <Clock className="w-3 h-3 text-amber-600" />
+                      <span className="text-on-surface-variant font-bold flex items-center gap-1">
+                        <Clock className="w-3 h-3 text-secondary" />
                         Active ({a.withdrawalDaysLeft}d)
                       </span>
                     ) : (
@@ -352,3 +352,4 @@ export const FarmManagementScreen: React.FC<FarmManagementScreenProps> = ({
     </div>
   );
 };
+

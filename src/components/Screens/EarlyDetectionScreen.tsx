@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+﻿import React, { useMemo, useState } from 'react';
 import {
   Activity,
   AlertTriangle,
@@ -25,17 +25,24 @@ interface EarlyDetectionScreenProps {
   ) => void;
 }
 
-
-
-
 type RiskLevel = 'Low' | 'Medium' | 'High';
 
+type SupportedSpecies =
+  | 'Cattle'
+  | 'Buffalo'
+  | 'Goat'
+  | 'Sheep'
+  | 'Pig'
+  | 'Chicken'
+  | 'Duck'
+  | 'Camel';
+
 interface ConditionRule {
+  species: SupportedSpecies;
   name: string;
   symptoms: string[];
   highRiskSymptoms?: string[];
   description: string;
-
   sourceName?: string;
   sourceUrl?: string;
 }
@@ -47,10 +54,13 @@ interface DetectionResult {
   confidence: number;
   explanation: string;
   recommendedAction: string;
-
   sourceName?: string;
   sourceUrl?: string;
 }
+
+/* =========================================================
+   ALL AVAILABLE SYMPTOMS
+========================================================= */
 
 const SYMPTOMS = [
   'Fever',
@@ -60,6 +70,7 @@ const SYMPTOMS = [
   'Udder pain',
   'Abnormal milk',
   'Cough',
+  'Sneezing',
   'Nasal discharge',
   'Difficulty breathing',
   'Diarrhea',
@@ -69,11 +80,24 @@ const SYMPTOMS = [
   'Mouth lesions',
   'Lameness',
   'Skin nodules',
-  'Skin lesions'
+  'Skin lesions',
+  'Reduced egg production',
+  'Ruffled feathers',
+  'Weight loss',
+  'Itching',
+  'Hair loss',
+  'Crusty skin'
 ];
 
+/* =========================================================
+   SPECIES-SPECIFIC DISEASE RULES
+========================================================= */
+
 const CONDITION_RULES: ConditionRule[] = [
+  /* ================= CATTLE ================= */
+
   {
+    species: 'Cattle',
     name: 'Mastitis',
     symptoms: [
       'Fever',
@@ -82,16 +106,19 @@ const CONDITION_RULES: ConditionRule[] = [
       'Udder pain',
       'Abnormal milk'
     ],
-    highRiskSymptoms: ['Udder swelling', 'Abnormal milk'],
+    highRiskSymptoms: [
+      'Udder swelling',
+      'Abnormal milk'
+    ],
     description:
       'The reported symptoms show a pattern commonly associated with inflammation or infection of the udder.',
-
     sourceName: 'MSD Veterinary Manual',
     sourceUrl:
       'https://www.msdvetmanual.com/reproductive-system/mastitis-in-large-animals/mastitis-in-cattle'
   },
 
   {
+    species: 'Cattle',
     name: 'Foot and Mouth Disease Risk',
     symptoms: [
       'Fever',
@@ -100,17 +127,20 @@ const CONDITION_RULES: ConditionRule[] = [
       'Lameness',
       'Reduced appetite'
     ],
-    highRiskSymptoms: ['Mouth lesions', 'Excess salivation'],
+    highRiskSymptoms: [
+      'Mouth lesions',
+      'Excess salivation'
+    ],
     description:
-      'The selected symptoms require prompt veterinary evaluation because they may be associated with a contagious vesicular disease.',
-
+      'The selected symptoms may be associated with a contagious vesicular disease requiring prompt veterinary evaluation.',
     sourceName: 'MSD Veterinary Manual',
     sourceUrl:
       'https://www.msdvetmanual.com/infectious-diseases/foot-and-mouth-disease/foot-and-mouth-disease-in-animals'
   },
 
   {
-    name: 'Respiratory Infection',
+    species: 'Cattle',
+    name: 'Respiratory Disease Risk',
     symptoms: [
       'Fever',
       'Cough',
@@ -118,17 +148,19 @@ const CONDITION_RULES: ConditionRule[] = [
       'Difficulty breathing',
       'Reduced appetite'
     ],
-    highRiskSymptoms: ['Difficulty breathing'],
+    highRiskSymptoms: [
+      'Difficulty breathing'
+    ],
     description:
-      'The symptom combination may indicate a respiratory infection or another condition affecting the respiratory system.',
-
-sourceName: 'MSD Veterinary Manual',
-sourceUrl:
-  'https://www.msdvetmanual.com/respiratory-system/bovine-respiratory-disease-complex/overview-of-bovine-respiratory-disease-complex'
+      'The selected symptom pattern may indicate disease affecting the respiratory system.',
+    sourceName: 'MSD Veterinary Manual',
+    sourceUrl:
+      'https://www.msdvetmanual.com/respiratory-system/bovine-respiratory-disease-complex/overview-of-bovine-respiratory-disease-complex'
   },
 
   {
-    name: 'Gastrointestinal Infection',
+    species: 'Cattle',
+    name: 'Gastrointestinal Disease Risk',
     symptoms: [
       'Diarrhea',
       'Reduced appetite',
@@ -136,16 +168,18 @@ sourceUrl:
       'Dehydration',
       'Fever'
     ],
-    highRiskSymptoms: ['Dehydration'],
+    highRiskSymptoms: [
+      'Dehydration'
+    ],
     description:
-      'The selected signs may indicate gastrointestinal illness, infection, or another digestive-system disorder.',
-
+      'The selected signs may indicate gastrointestinal illness, infection, or another digestive disorder.',
     sourceName: 'MSD Veterinary Manual',
-sourceUrl:
-  'https://www.msdvetmanual.com/digestive-system/intestinal-diseases-in-ruminants/intestinal-diseases-in-cattle'
+    sourceUrl:
+      'https://www.msdvetmanual.com/digestive-system/intestinal-diseases-in-ruminants/intestinal-diseases-in-cattle'
   },
 
   {
+    species: 'Cattle',
     name: 'Lumpy Skin Disease Risk',
     symptoms: [
       'Skin nodules',
@@ -154,15 +188,420 @@ sourceUrl:
       'Reduced appetite',
       'Reduced milk production'
     ],
-    highRiskSymptoms: ['Skin nodules'],
+    highRiskSymptoms: [
+      'Skin nodules'
+    ],
     description:
       'Skin nodules combined with systemic symptoms require veterinary examination for possible infectious skin disease.',
-
     sourceName: 'MSD Veterinary Manual',
-sourceUrl:
-  'https://www.msdvetmanual.com/integumentary-system/pox-diseases/lumpy-skin-disease-in-cattle'
+    sourceUrl:
+      'https://www.msdvetmanual.com/integumentary-system/pox-diseases/lumpy-skin-disease-in-cattle'
+  },
+
+  /* ================= BUFFALO ================= */
+
+  {
+    species: 'Buffalo',
+    name: 'Mastitis Risk',
+    symptoms: [
+      'Fever',
+      'Reduced milk production',
+      'Udder swelling',
+      'Udder pain',
+      'Abnormal milk'
+    ],
+    highRiskSymptoms: [
+      'Udder swelling',
+      'Abnormal milk'
+    ],
+    description:
+      'The selected signs may indicate inflammation or infection of the udder and require veterinary assessment.',
+    sourceName: 'MSD Veterinary Manual',
+    sourceUrl:
+      'https://www.msdvetmanual.com/reproductive-system/mastitis-in-large-animals/mastitis-in-cattle'
+  },
+
+  {
+    species: 'Buffalo',
+    name: 'Foot and Mouth Disease Risk',
+    symptoms: [
+      'Fever',
+      'Excess salivation',
+      'Mouth lesions',
+      'Lameness',
+      'Reduced appetite'
+    ],
+    highRiskSymptoms: [
+      'Mouth lesions',
+      'Excess salivation'
+    ],
+    description:
+      'These signs may be associated with a contagious vesicular disease and require prompt veterinary evaluation.',
+    sourceName: 'MSD Veterinary Manual',
+    sourceUrl:
+      'https://www.msdvetmanual.com/infectious-diseases/foot-and-mouth-disease/foot-and-mouth-disease-in-animals'
+  },
+
+  {
+    species: 'Buffalo',
+    name: 'Gastrointestinal Disease Risk',
+    symptoms: [
+      'Diarrhea',
+      'Reduced appetite',
+      'Weakness',
+      'Dehydration',
+      'Fever'
+    ],
+    highRiskSymptoms: [
+      'Dehydration'
+    ],
+    description:
+      'The selected signs may indicate gastrointestinal disease requiring veterinary evaluation.',
+    sourceName: 'MSD Veterinary Manual',
+    sourceUrl:
+      'https://www.msdvetmanual.com/digestive-system/intestinal-diseases-in-ruminants/intestinal-diseases-in-cattle'
+  },
+
+  /* ================= GOAT ================= */
+
+  {
+    species: 'Goat',
+    name: 'Respiratory Disease Risk',
+    symptoms: [
+      'Fever',
+      'Cough',
+      'Nasal discharge',
+      'Difficulty breathing',
+      'Reduced appetite'
+    ],
+    highRiskSymptoms: [
+      'Difficulty breathing'
+    ],
+    description:
+      'Cough, nasal discharge and breathing difficulty may indicate respiratory disease in goats.',
+    sourceName: 'MSD Veterinary Manual',
+    sourceUrl:
+      'https://www.msdvetmanual.com/respiratory-system/respiratory-diseases-of-sheep-and-goats/overview-of-respiratory-diseases-of-sheep-and-goats'
+  },
+
+  {
+    species: 'Goat',
+    name: 'Foot and Mouth Disease Risk',
+    symptoms: [
+      'Fever',
+      'Excess salivation',
+      'Mouth lesions',
+      'Lameness',
+      'Reduced appetite'
+    ],
+    highRiskSymptoms: [
+      'Mouth lesions'
+    ],
+    description:
+      'Oral lesions, excessive salivation and lameness require prompt veterinary investigation.',
+    sourceName: 'MSD Veterinary Manual',
+    sourceUrl:
+      'https://www.msdvetmanual.com/infectious-diseases/foot-and-mouth-disease/foot-and-mouth-disease-in-animals'
+  },
+
+  {
+    species: 'Goat',
+    name: 'Gastrointestinal Disease Risk',
+    symptoms: [
+      'Diarrhea',
+      'Reduced appetite',
+      'Weakness',
+      'Dehydration',
+      'Weight loss'
+    ],
+    highRiskSymptoms: [
+      'Dehydration'
+    ],
+    description:
+      'Diarrhea with weakness, dehydration or weight loss may indicate significant gastrointestinal disease.',
+    sourceName: 'MSD Veterinary Manual',
+    sourceUrl:
+      'https://www.msdvetmanual.com/digestive-system/intestinal-diseases-in-ruminants/intestinal-diseases-in-sheep-and-goats'
+  },
+
+  /* ================= SHEEP ================= */
+
+  {
+    species: 'Sheep',
+    name: 'Respiratory Disease Risk',
+    symptoms: [
+      'Fever',
+      'Cough',
+      'Nasal discharge',
+      'Difficulty breathing',
+      'Reduced appetite'
+    ],
+    highRiskSymptoms: [
+      'Difficulty breathing'
+    ],
+    description:
+      'These signs may indicate respiratory disease requiring veterinary examination.',
+    sourceName: 'MSD Veterinary Manual',
+    sourceUrl:
+      'https://www.msdvetmanual.com/respiratory-system/respiratory-diseases-of-sheep-and-goats/bacterial-bronchopneumonia-in-sheep-and-goats'
+  },
+
+  {
+    species: 'Sheep',
+    name: 'Foot and Mouth Disease Risk',
+    symptoms: [
+      'Fever',
+      'Excess salivation',
+      'Mouth lesions',
+      'Lameness',
+      'Reduced appetite'
+    ],
+    highRiskSymptoms: [
+      'Mouth lesions',
+      'Lameness'
+    ],
+    description:
+      'The selected pattern warrants investigation for contagious vesicular disease.',
+    sourceName: 'MSD Veterinary Manual',
+    sourceUrl:
+      'https://www.msdvetmanual.com/infectious-diseases/foot-and-mouth-disease/foot-and-mouth-disease-in-animals'
+  },
+
+  {
+    species: 'Sheep',
+    name: 'Gastrointestinal Disease Risk',
+    symptoms: [
+      'Diarrhea',
+      'Reduced appetite',
+      'Weakness',
+      'Dehydration',
+      'Weight loss'
+    ],
+    highRiskSymptoms: [
+      'Dehydration'
+    ],
+    description:
+      'The selected signs may indicate gastrointestinal disease or another digestive disorder.',
+    sourceName: 'MSD Veterinary Manual',
+    sourceUrl:
+      'https://www.msdvetmanual.com/digestive-system/intestinal-diseases-in-ruminants/intestinal-diseases-in-sheep-and-goats'
+  },
+
+  /* ================= PIG ================= */
+
+  {
+    species: 'Pig',
+    name: 'Porcine Respiratory Disease Risk',
+    symptoms: [
+      'Fever',
+      'Cough',
+      'Nasal discharge',
+      'Difficulty breathing',
+      'Reduced appetite'
+    ],
+    highRiskSymptoms: [
+      'Difficulty breathing'
+    ],
+    description:
+      'The selected signs may indicate porcine respiratory disease or another respiratory infection.',
+    sourceName: 'MSD Veterinary Manual',
+    sourceUrl:
+      'https://www.msdvetmanual.com/respiratory-system/respiratory-diseases-of-pigs/overview-of-respiratory-diseases-of-pigs'
+  },
+
+  {
+    species: 'Pig',
+    name: 'Enteric Disease Risk',
+    symptoms: [
+      'Diarrhea',
+      'Reduced appetite',
+      'Weakness',
+      'Dehydration',
+      'Weight loss'
+    ],
+    highRiskSymptoms: [
+      'Dehydration'
+    ],
+    description:
+      'Diarrhea, weakness and dehydration may indicate an enteric disease in pigs.',
+    sourceName: 'MSD Veterinary Manual',
+    sourceUrl:
+      'https://www.msdvetmanual.com/digestive-system/intestinal-diseases-in-pigs/overview-of-intestinal-diseases-in-pigs'
+  },
+
+  {
+    species: 'Pig',
+    name: 'Swine Erysipelas Risk',
+    symptoms: [
+      'Fever',
+      'Reduced appetite',
+      'Weakness',
+      'Skin lesions',
+      'Lameness'
+    ],
+    highRiskSymptoms: [
+      'Skin lesions',
+      'Lameness'
+    ],
+    description:
+      'Fever combined with skin abnormalities or lameness can be associated with swine erysipelas.',
+    sourceName: 'MSD Veterinary Manual',
+    sourceUrl:
+      'https://www.msdvetmanual.com/infectious-diseases/erysipelothrix-rhusiopathiae-infection/swine-erysipelas'
+  },
+
+  /* ================= CHICKEN ================= */
+
+  {
+    species: 'Chicken',
+    name: 'Infectious Bronchitis Risk',
+    symptoms: [
+      'Cough',
+      'Sneezing',
+      'Nasal discharge',
+      'Difficulty breathing',
+      'Reduced egg production'
+    ],
+    highRiskSymptoms: [
+      'Difficulty breathing'
+    ],
+    description:
+      'Respiratory signs combined with reduced egg production may be associated with infectious bronchitis.',
+    sourceName: 'MSD Veterinary Manual',
+    sourceUrl:
+      'https://www.msdvetmanual.com/poultry/infectious-bronchitis/infectious-bronchitis-in-chickens'
+  },
+
+  {
+    species: 'Chicken',
+    name: 'Coccidiosis Risk',
+    symptoms: [
+      'Diarrhea',
+      'Weakness',
+      'Reduced appetite',
+      'Weight loss',
+      'Dehydration',
+      'Ruffled feathers'
+    ],
+    highRiskSymptoms: [
+      'Dehydration'
+    ],
+    description:
+      'Diarrhea, weakness, poor condition and weight loss may be associated with poultry coccidiosis.',
+    sourceName: 'MSD Veterinary Manual',
+    sourceUrl:
+      'https://www.msdvetmanual.com/poultry/coccidiosis-in-poultry/coccidiosis-in-poultry'
+  },
+
+  /* ================= DUCK ================= */
+
+  {
+    species: 'Duck',
+    name: 'Duck Viral Enteritis Risk',
+    symptoms: [
+      'Reduced appetite',
+      'Weakness',
+      'Nasal discharge',
+      'Diarrhea',
+      'Dehydration'
+    ],
+    highRiskSymptoms: [
+      'Dehydration'
+    ],
+    description:
+      'Weakness, diarrhea and other systemic signs may warrant investigation for infectious disease such as duck viral enteritis.',
+    sourceName: 'MSD Veterinary Manual',
+    sourceUrl:
+      'https://www.msdvetmanual.com/poultry/duck-viral-enteritis/duck-viral-enteritis'
+  },
+
+  {
+    species: 'Duck',
+    name: 'Coccidiosis Risk',
+    symptoms: [
+      'Diarrhea',
+      'Weakness',
+      'Reduced appetite',
+      'Weight loss',
+      'Dehydration'
+    ],
+    highRiskSymptoms: [
+      'Dehydration'
+    ],
+    description:
+      'Digestive signs and loss of condition may indicate coccidial or another intestinal disease.',
+    sourceName: 'MSD Veterinary Manual',
+    sourceUrl:
+      'https://www.msdvetmanual.com/poultry/coccidiosis-in-poultry/coccidiosis-in-poultry'
+  },
+
+  /* ================= CAMEL ================= */
+
+  {
+    species: 'Camel',
+    name: 'Respiratory Disease Risk',
+    symptoms: [
+      'Fever',
+      'Cough',
+      'Nasal discharge',
+      'Difficulty breathing',
+      'Reduced appetite'
+    ],
+    highRiskSymptoms: [
+      'Difficulty breathing'
+    ],
+    description:
+      'The selected respiratory signs require veterinary examination to determine the underlying disease.',
+    sourceName: 'MSD Veterinary Manual',
+    sourceUrl:
+      'https://www.msdvetmanual.com/respiratory-system/respiratory-system-introduction/clinical-signs-of-respiratory-disease-in-animals'
+  },
+
+  {
+    species: 'Camel',
+    name: 'Mange / Skin Disease Risk',
+    symptoms: [
+      'Skin lesions',
+      'Itching',
+      'Hair loss',
+      'Crusty skin',
+      'Weakness'
+    ],
+    highRiskSymptoms: [
+      'Skin lesions',
+      'Crusty skin'
+    ],
+    description:
+      'Itching, hair loss and crusting may indicate mange or another dermatological disorder.',
+    sourceName: 'MSD Veterinary Manual',
+    sourceUrl:
+      'https://www.msdvetmanual.com/integumentary-system/mange/overview-of-mange-in-animals'
+  },
+
+  {
+    species: 'Camel',
+    name: 'Gastrointestinal Disease Risk',
+    symptoms: [
+      'Diarrhea',
+      'Reduced appetite',
+      'Weakness',
+      'Dehydration',
+      'Weight loss'
+    ],
+    highRiskSymptoms: [
+      'Dehydration'
+    ],
+    description:
+      'Digestive signs combined with dehydration or weight loss require veterinary evaluation.',
+    sourceName: 'MSD Veterinary Manual',
+    sourceUrl:
+      'https://www.msdvetmanual.com/digestive-system/digestive-system-introduction/noninfectious-diseases-of-the-gastrointestinal-tract-in-animals'
   }
 ];
+
+/* =========================================================
+   RISK UI
+========================================================= */
 
 const getRiskStyles = (risk: RiskLevel) => {
   if (risk === 'High') {
@@ -175,9 +614,9 @@ const getRiskStyles = (risk: RiskLevel) => {
 
   if (risk === 'Medium') {
     return {
-      badge: 'bg-amber-100 text-amber-800',
-      card: 'border-amber-300 bg-amber-50/60',
-      icon: 'text-amber-700'
+      badge: 'bg-surface-container text-on-surface-variant',
+      card: 'border-outline-variant bg-surface-container/60',
+      icon: 'text-secondary'
     };
   }
 
@@ -188,13 +627,17 @@ const getRiskStyles = (risk: RiskLevel) => {
   };
 };
 
+/* =========================================================
+   COMPONENT
+========================================================= */
+
 export const EarlyDetectionScreen: React.FC<
   EarlyDetectionScreenProps
 > = ({
   animals,
   onSelectAnimal,
   onNavigate,
-  onSendToVet,
+  onSendToVet
 }) => {
   const [selectedAnimalId, setSelectedAnimalId] =
     useState<string>(animals[0]?.id || '');
@@ -202,11 +645,14 @@ export const EarlyDetectionScreen: React.FC<
   const [selectedSymptoms, setSelectedSymptoms] =
     useState<string[]>([]);
 
-  const [searchTerm, setSearchTerm] =
-    useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
   const [result, setResult] =
     useState<DetectionResult | null>(null);
+
+  /* =========================================================
+     SELECTED ANIMAL
+  ========================================================= */
 
   const selectedAnimal = useMemo(
     () =>
@@ -216,22 +662,51 @@ export const EarlyDetectionScreen: React.FC<
     [animals, selectedAnimalId]
   );
 
+  /* =========================================================
+     SPECIES-SPECIFIC SYMPTOMS
+  ========================================================= */
+
+  const speciesSymptoms = useMemo(() => {
+    if (!selectedAnimal) {
+      return SYMPTOMS;
+    }
+
+    const rules = CONDITION_RULES.filter(
+      (condition) =>
+        condition.species === selectedAnimal.species
+    );
+
+    return Array.from(
+      new Set(
+        rules.flatMap(
+          (condition) => condition.symptoms
+        )
+      )
+    );
+  }, [selectedAnimal]);
+
   const filteredSymptoms = useMemo(
     () =>
-      SYMPTOMS.filter((symptom) =>
+      speciesSymptoms.filter((symptom) =>
         symptom
           .toLowerCase()
           .includes(searchTerm.toLowerCase())
       ),
-    [searchTerm]
+    [speciesSymptoms, searchTerm]
   );
+
+  /* =========================================================
+     SYMPTOM ACTIONS
+  ========================================================= */
 
   const toggleSymptom = (symptom: string) => {
     setResult(null);
 
     setSelectedSymptoms((current) =>
       current.includes(symptom)
-        ? current.filter((item) => item !== symptom)
+        ? current.filter(
+            (item) => item !== symptom
+          )
         : [...current, symptom]
     );
   };
@@ -242,13 +717,25 @@ export const EarlyDetectionScreen: React.FC<
     setSearchTerm('');
   };
 
+  /* =========================================================
+     RULE-BASED ANALYSIS
+  ========================================================= */
+
   const analyzeRisk = () => {
-    if (!selectedAnimal || selectedSymptoms.length === 0) {
+    if (
+      !selectedAnimal ||
+      selectedSymptoms.length === 0
+    ) {
       return;
     }
 
-    const scoredConditions = CONDITION_RULES.map(
-      (condition) => {
+    const scoredConditions = CONDITION_RULES
+      .filter(
+        (condition) =>
+          condition.species ===
+          selectedAnimal.species
+      )
+      .map((condition) => {
         const matchedSymptoms =
           condition.symptoms.filter((symptom) =>
             selectedSymptoms.includes(symptom)
@@ -270,8 +757,8 @@ export const EarlyDetectionScreen: React.FC<
           score,
           hasHighRiskSymptom
         };
-      }
-    ).sort((a, b) => b.score - a.score);
+      })
+      .sort((a, b) => b.score - a.score);
 
     const bestMatch = scoredConditions[0];
 
@@ -285,7 +772,7 @@ export const EarlyDetectionScreen: React.FC<
         matchedSymptoms: selectedSymptoms,
         confidence: 20,
         explanation:
-          'The selected symptoms do not currently match a strong condition pattern in the screening rules.',
+          `The selected symptoms do not currently match a strong ${selectedAnimal.species} disease pattern in the screening rules.`,
         recommendedAction:
           'Continue monitoring the animal and consult a veterinarian if symptoms persist, worsen, or new signs appear.'
       });
@@ -327,13 +814,13 @@ export const EarlyDetectionScreen: React.FC<
       explanation:
         bestMatch.description,
 
-        
+      sourceName:
+        bestMatch.sourceName,
 
-        sourceName: bestMatch.sourceName,
-sourceUrl: bestMatch.sourceUrl,
+      sourceUrl:
+        bestMatch.sourceUrl,
 
       recommendedAction:
-      
         riskLevel === 'High'
           ? 'Veterinary review is recommended as soon as possible. Isolate the animal if an infectious condition is suspected and avoid starting antibiotics without veterinary guidance.'
           : riskLevel === 'Medium'
@@ -342,30 +829,43 @@ sourceUrl: bestMatch.sourceUrl,
     });
   };
 
-const handleSendToVet = () => {
-  if (!selectedAnimal || !result) return;
+  /* =========================================================
+     SEND TO VETERINARY REVIEW
+  ========================================================= */
 
-  if (onSendToVet) {
-    onSendToVet(
-      selectedAnimal,
-      result.condition,
-      result.riskLevel,
-      selectedSymptoms
-    );
-  } else {
+  const handleSendToVet = () => {
+    if (!selectedAnimal || !result) {
+      return;
+    }
+
+    if (onSendToVet) {
+      onSendToVet(
+        selectedAnimal,
+        result.condition,
+        result.riskLevel,
+        selectedSymptoms
+      );
+
+      return;
+    }
+
     onSelectAnimal(selectedAnimal);
     onNavigate('veterinary-review');
-  }
-};
+  };
 
   const riskStyles = result
     ? getRiskStyles(result.riskLevel)
     : null;
 
+  /* =========================================================
+     UI
+  ========================================================= */
+
   return (
     <div className="space-y-6 pb-12">
 
-      {/* Header */}
+      {/* HEADER */}
+
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-2">
@@ -383,9 +883,10 @@ const handleSendToVet = () => {
           </h1>
 
           <p className="text-sm text-on-surface-variant mt-1 max-w-3xl">
-            Screen livestock symptoms early, identify
-            possible disease patterns and escalate
-            suspicious cases for veterinary review.
+            Screen species-specific livestock symptoms,
+            identify possible disease patterns and
+            escalate suspicious cases for veterinary
+            review.
           </p>
         </div>
 
@@ -404,7 +905,8 @@ const handleSendToVet = () => {
         </div>
       </div>
 
-      {/* Workflow */}
+      {/* WORKFLOW */}
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {[
           {
@@ -415,12 +917,12 @@ const handleSendToVet = () => {
           {
             number: '02',
             title: 'Record Symptoms',
-            text: 'Select currently observed clinical signs.'
+            text: 'Symptoms automatically adapt to the selected species.'
           },
           {
             number: '03',
             title: 'Screen Risk',
-            text: 'Generate suspected condition and risk level.'
+            text: 'Generate a species-specific suspected condition and risk level.'
           }
         ].map((step) => (
           <div
@@ -449,9 +951,11 @@ const handleSendToVet = () => {
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
 
         {/* LEFT */}
+
         <div className="xl:col-span-7 space-y-6">
 
-          {/* Animal */}
+          {/* SELECT ANIMAL */}
+
           <section className="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-xs p-5 sm:p-6">
             <div className="flex items-center gap-2 pb-4 border-b border-outline-variant/40">
               <Activity className="w-5 h-5 text-secondary" />
@@ -474,6 +978,9 @@ const handleSendToVet = () => {
                 setSelectedAnimalId(
                   event.target.value
                 );
+
+                setSelectedSymptoms([]);
+                setSearchTerm('');
                 setResult(null);
               }}
               className="mt-4 w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-sm text-on-surface focus:outline-none focus:border-primary"
@@ -485,9 +992,11 @@ const handleSendToVet = () => {
                 >
                   {animal.id}
                   {animal.name
-                    ? ` — ${animal.name}`
-                    : ''}{' '}
-                  — {animal.species} —{' '}
+                    ? ` â€” ${animal.name}`
+                    : ''}
+                  {' â€” '}
+                  {animal.species}
+                  {' â€” '}
                   {animal.farmName}
                 </option>
               ))}
@@ -518,6 +1027,7 @@ const handleSendToVet = () => {
                       <span className="text-outline">
                         Species
                       </span>
+
                       <p className="font-bold text-on-surface mt-0.5">
                         {selectedAnimal.species}
                       </p>
@@ -527,6 +1037,7 @@ const handleSendToVet = () => {
                       <span className="text-outline">
                         Breed
                       </span>
+
                       <p className="font-bold text-on-surface mt-0.5">
                         {selectedAnimal.breed}
                       </p>
@@ -536,6 +1047,7 @@ const handleSendToVet = () => {
                       <span className="text-outline">
                         Health
                       </span>
+
                       <p className="font-bold text-on-surface mt-0.5">
                         {selectedAnimal.healthStatus}
                       </p>
@@ -545,6 +1057,7 @@ const handleSendToVet = () => {
                       <span className="text-outline">
                         Risk
                       </span>
+
                       <p className="font-bold text-on-surface mt-0.5">
                         {selectedAnimal.riskLevel}
                       </p>
@@ -555,7 +1068,8 @@ const handleSendToVet = () => {
             )}
           </section>
 
-          {/* Symptoms */}
+          {/* SYMPTOMS */}
+
           <section className="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-xs p-5 sm:p-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-outline-variant/40">
               <div>
@@ -564,8 +1078,11 @@ const handleSendToVet = () => {
                 </h2>
 
                 <p className="text-xs text-on-surface-variant mt-1">
-                  Select every symptom currently visible
-                  in the animal.
+                  Showing symptoms relevant to{' '}
+                  <strong>
+                    {selectedAnimal?.species ||
+                      'the selected animal'}
+                  </strong>.
                 </p>
               </div>
 
@@ -593,7 +1110,9 @@ const handleSendToVet = () => {
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
               {filteredSymptoms.map((symptom) => {
                 const active =
-                  selectedSymptoms.includes(symptom);
+                  selectedSymptoms.includes(
+                    symptom
+                  );
 
                 return (
                   <button
@@ -650,6 +1169,7 @@ const handleSendToVet = () => {
         </div>
 
         {/* RIGHT RESULT */}
+
         <div className="xl:col-span-5">
           <section className="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-xs p-5 sm:p-6 xl:sticky xl:top-24">
 
@@ -662,7 +1182,8 @@ const handleSendToVet = () => {
                 </h2>
 
                 <p className="text-xs text-on-surface-variant">
-                  Rule-based early risk assessment.
+                  Species-aware rule-based early risk
+                  assessment.
                 </p>
               </div>
             </div>
@@ -679,11 +1200,13 @@ const handleSendToVet = () => {
 
                 <p className="text-xs text-on-surface-variant mt-2 max-w-xs leading-relaxed">
                   Select an animal and observed symptoms,
-                  then run the early detection screening.
+                  then run the early disease screening.
                 </p>
               </div>
             ) : (
               <div className="mt-5 space-y-4">
+
+                {/* CONDITION */}
 
                 <div
                   className={`p-4 rounded-2xl border ${riskStyles?.card}`}
@@ -697,6 +1220,15 @@ const handleSendToVet = () => {
                       <h3 className="text-xl font-black text-primary mt-1">
                         {result.condition}
                       </h3>
+
+                      {selectedAnimal && (
+                        <p className="text-xs text-on-surface-variant mt-1">
+                          Species:{' '}
+                          <strong>
+                            {selectedAnimal.species}
+                          </strong>
+                        </p>
+                      )}
                     </div>
 
                     <span
@@ -721,12 +1253,15 @@ const handleSendToVet = () => {
                       <div
                         className="h-full bg-primary rounded-full"
                         style={{
-                          width: `${result.confidence}%`
+                          width:
+                            `${result.confidence}%`
                         }}
                       />
                     </div>
                   </div>
                 </div>
+
+                {/* WHY FLAGGED */}
 
                 <div className="p-4 rounded-xl bg-surface-container-low border border-outline-variant/60">
                   <h4 className="text-xs font-black uppercase tracking-wide text-primary">
@@ -751,46 +1286,51 @@ const handleSendToVet = () => {
                   </div>
                 </div>
 
-               {/* Recommended Action */}
-<div className="p-4 rounded-xl border border-outline-variant bg-surface-container-lowest">
-  <div className="flex items-start gap-3">
-    <AlertTriangle
-      className={`w-5 h-5 shrink-0 ${riskStyles?.icon}`}
-    />
+                {/* RECOMMENDED ACTION */}
 
-    <div>
-      <h4 className="text-xs font-black text-primary">
-        Recommended Next Action
-      </h4>
+                <div className="p-4 rounded-xl border border-outline-variant bg-surface-container-lowest">
+                  <div className="flex items-start gap-3">
+                    <AlertTriangle
+                      className={`w-5 h-5 shrink-0 ${riskStyles?.icon}`}
+                    />
 
-      <p className="text-xs text-on-surface-variant mt-1.5 leading-relaxed">
-        {result.recommendedAction}
-      </p>
-    </div>
-  </div>
-</div>
+                    <div>
+                      <h4 className="text-xs font-black text-primary">
+                        Recommended Next Action
+                      </h4>
 
-{/* Clinical Reference */}
-{result.sourceUrl && (
-  <div className="p-4 rounded-xl border border-outline-variant bg-surface-container-low">
-    <p className="text-xs font-black text-primary">
-      Clinical Reference
-    </p>
+                      <p className="text-xs text-on-surface-variant mt-1.5 leading-relaxed">
+                        {result.recommendedAction}
+                      </p>
+                    </div>
+                  </div>
+                </div>
 
-    <p className="text-xs text-on-surface-variant mt-1">
-      Symptom pattern validated using:
-    </p>
+                {/* CLINICAL REFERENCE */}
 
-    <a
-      href={result.sourceUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="inline-block mt-2 text-sm font-bold text-primary underline"
-    >
-      {result.sourceName || 'MSD Veterinary Manual'}
-    </a>
-  </div>
-)}
+                {result.sourceUrl && (
+                  <div className="p-4 rounded-xl border border-outline-variant bg-surface-container-low">
+                    <p className="text-xs font-black text-primary">
+                      Clinical Reference
+                    </p>
+
+                    <p className="text-xs text-on-surface-variant mt-1">
+                      Symptom pattern validated using:
+                    </p>
+
+                    <a
+                      href={result.sourceUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block mt-2 text-sm font-bold text-primary underline"
+                    >
+                      {result.sourceName ||
+                        'MSD Veterinary Manual'}
+                    </a>
+                  </div>
+                )}
+
+                {/* SEND TO VET */}
 
                 <button
                   type="button"
@@ -804,7 +1344,7 @@ const handleSendToVet = () => {
                 <p className="text-[10px] text-outline leading-relaxed">
                   This screening does not replace clinical
                   examination, laboratory testing, or a
-                  veterinarian's diagnosis.
+                  veterinarian&apos;s diagnosis.
                 </p>
               </div>
             )}

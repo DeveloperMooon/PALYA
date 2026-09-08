@@ -1,4 +1,4 @@
-export type ScreenId =
+﻿export type ScreenId =
   | 'landing'
   | 'auth'
   | 'launch'
@@ -80,7 +80,15 @@ export interface Animal {
   id: string;
   tag: string;
   name?: string;
-  species: 'Cattle' | 'Buffalo' | 'Goat' | 'Sheep';
+ species:
+  | 'Cattle'
+  | 'Buffalo'
+  | 'Goat'
+  | 'Sheep'
+  | 'Pig'
+  | 'Chicken'
+  | 'Duck'
+  | 'Camel';
   breed: string;
   gender: 'Female' | 'Male';
   age: string;
@@ -147,7 +155,7 @@ export interface TreatmentRecord {
 export interface AlertItem {
   id: string;
 
-  // Alert kitna serious hai — SmartAlertsScreen isi se
+  // Alert kitna serious hai â€” SmartAlertsScreen isi se
   // icon/color/filter decide karta hai
   type: 'critical' | 'warning' | 'action_required' | 'review_required';
 
@@ -157,7 +165,7 @@ export interface AlertItem {
   animalId: string;
 
   // App.tsx ke andar new alert banate waqt animalTag bhi use hota hai,
-  // lekin mockData ke purane alerts mein ye field nahi hai —
+  // lekin mockData ke purane alerts mein ye field nahi hai â€”
   // isliye optional (?) rakha hai
   animalTag?: string;
 
@@ -168,13 +176,13 @@ export interface AlertItem {
   actionButtonLabel: string;
 
   // User ne alert ko "Acknowledge/Reviewed" kiya ya nahi
-  // (optional — jab tak review na ho, ye undefined/false rahega)
+  // (optional â€” jab tak review na ho, ye undefined/false rahega)
   reviewed?: boolean;
 }
 
 
 // ---------------------------------------------------------
-// VETERINARY CASE — TIMELINE ENTRY
+// VETERINARY CASE â€” TIMELINE ENTRY
 // Ek case ke andar timeline ka ek single step (chhota part)
 // ---------------------------------------------------------
 export interface VetCaseTimelineEntry {
@@ -187,7 +195,7 @@ export interface VetCaseTimelineEntry {
 
 
 // ---------------------------------------------------------
-// VETERINARY CASE — ANTIMICROBIAL HISTORY ENTRY
+// VETERINARY CASE â€” ANTIMICROBIAL HISTORY ENTRY
 // Case ke andar purani antimicrobial doses ki history
 // ---------------------------------------------------------
 export interface AntimicrobialHistoryEntry {
@@ -228,7 +236,7 @@ export interface VeterinaryCase {
   withdrawalDaysLeft: number;
 
   // Iske exact values fixed nahi hain (Negative, Moderate, etc.)
-  // isliye abhi plain string rakha hai — future mein tight kar sakte hain
+  // isliye abhi plain string rakha hai â€” future mein tight kar sakte hain
   stewardshipImpact: string;
 
   imageUrl: string;

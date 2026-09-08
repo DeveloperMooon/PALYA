@@ -1,4 +1,4 @@
-import React, {
+﻿import React, {
   useEffect,
   useRef,
   useState
@@ -425,11 +425,11 @@ export const VeterinaryCaseScreen: React.FC<
 
               <p className="text-xs text-on-surface-variant mt-1">
                 {vetCase.species}
-                {' • '}
+                {' â€¢ '}
                 {vetCase.breed}
-                {' • '}
+                {' â€¢ '}
                 {vetCase.age}
-                {' • '}
+                {' â€¢ '}
                 {vetCase.weight} kg
               </p>
 
@@ -618,17 +618,17 @@ export const VeterinaryCaseScreen: React.FC<
         <div className="lg:col-span-5 space-y-6">
 
           {/* Withdrawal */}
-          <div className="bg-amber-500/10 border border-amber-500/30 p-5 rounded-2xl">
+          <div className="bg-surface-container0/10 border border-outline-variant p-5 rounded-2xl">
 
-            <div className="flex items-center justify-between text-xs font-bold text-amber-900 mb-2">
+            <div className="flex items-center justify-between text-xs font-bold text-on-surface mb-2">
 
               <span className="flex items-center gap-1.5 uppercase tracking-wider">
-                <Clock className="w-4 h-4 text-amber-700" />
+                <Clock className="w-4 h-4 text-secondary" />
 
                 Active Withdrawal Period
               </span>
 
-              <span className="px-2 py-0.5 rounded-full bg-amber-200 text-amber-900 font-black">
+              <span className="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface font-black">
                 {
                   vetCase.withdrawalDaysLeft
                 }{' '}
@@ -637,7 +637,7 @@ export const VeterinaryCaseScreen: React.FC<
 
             </div>
 
-            <p className="text-xs text-amber-950 leading-relaxed">
+            <p className="text-xs text-on-surface leading-relaxed">
               Milk and meat withholding
               remains active until the
               withdrawal period is completed.
@@ -715,7 +715,7 @@ export const VeterinaryCaseScreen: React.FC<
                   Verified
                 </span>
               ) : (
-                <span className="text-[10px] font-black uppercase px-2.5 py-1 rounded-full bg-amber-100 text-amber-800">
+                <span className="text-[10px] font-black uppercase px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant">
                   Pending
                 </span>
               )}
@@ -791,7 +791,7 @@ export const VeterinaryCaseScreen: React.FC<
 
                     <p>
                       GPS accuracy:{' '}
-                      ±
+                      Â±
                       {Math.round(
                         visitLocation.accuracy
                       )}{' '}
@@ -1066,7 +1066,7 @@ export const VeterinaryCaseScreen: React.FC<
                     className={`p-2 rounded-xl border text-center transition-all cursor-pointer ${
                       selectedAction ===
                       'quarantine'
-                        ? 'bg-amber-100 text-amber-900 border-amber-400 ring-2 ring-amber-200'
+                        ? 'bg-surface-container text-on-surface border-outline-variant ring-2 ring-amber-200'
                         : 'border-outline-variant hover:bg-surface-container text-on-surface'
                     }`}
                   >
@@ -1115,19 +1115,19 @@ export const VeterinaryCaseScreen: React.FC<
               </div>
 
               {!visitVerified && (
-                <div className="p-3 rounded-xl bg-amber-50 border border-amber-200">
+                <div className="p-3 rounded-xl bg-surface-container border border-outline-variant">
 
                   <div className="flex gap-2 items-start">
 
-                    <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0" />
+                    <AlertTriangle className="w-4 h-4 text-secondary shrink-0" />
 
                     <div>
-                      <p className="text-xs font-bold text-amber-900">
+                      <p className="text-xs font-bold text-on-surface">
                         On-site verification
                         incomplete
                       </p>
 
-                      <p className="text-[11px] text-amber-800 mt-1">
+                      <p className="text-[11px] text-on-surface-variant mt-1">
                         Capture both live GPS
                         location and veterinarian
                         visit photograph to authorize
