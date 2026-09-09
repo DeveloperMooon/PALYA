@@ -129,8 +129,11 @@ app.delete(
         error: lookupError,
       } = await supabase
         .from('animals')
-        .select('id')
-        .eq('id', animalId)
+        .select('animal_id')
+        .eq(
+  'animal_id',
+  animalId
+)
         .maybeSingle();
 
       if (lookupError) {
@@ -178,8 +181,7 @@ app.delete(
       } = await supabase
         .from('animals')
         .delete()
-        .eq('id', animalId);
-
+        .eq('animal_id', animalId);
       if (animalDeleteError) {
         throw animalDeleteError;
       }

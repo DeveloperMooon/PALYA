@@ -24,11 +24,23 @@
   | 'analytics'
   | 'reports'
   | 'ai-assistant'
-  | 'settings';
+  | 'settings'
+  | 'admin-dashboard';
 
-export type UserRole = 'farmer' | 'veterinarian';
+export type UserRole =
+  | 'farmer'
+  | 'veterinarian';
 
 export type AppRole =
+  | 'livestock_owner'
+  | 'veterinarian'
+  | 'laboratory'
+  | 'government_official'
+  | 'collector'
+  | 'pharmaceutical_retailer'
+  | 'admin';
+
+export type DemoViewRole =
   | 'livestock_owner'
   | 'veterinarian'
   | 'laboratory'
@@ -80,15 +92,17 @@ export interface Animal {
   id: string;
   tag: string;
   name?: string;
- species:
-  | 'Cattle'
-  | 'Buffalo'
-  | 'Goat'
-  | 'Sheep'
-  | 'Pig'
-  | 'Chicken'
-  | 'Duck'
-  | 'Camel';
+
+  species:
+    | 'Cattle'
+    | 'Buffalo'
+    | 'Goat'
+    | 'Sheep'
+    | 'Pig'
+    | 'Chicken'
+    | 'Duck'
+    | 'Camel';
+
   breed: string;
   gender: 'Female' | 'Male';
   age: string;
@@ -123,18 +137,19 @@ export interface TreatmentRecord {
 
   dosage: string;
   doseValue: number;
-  doseUnit: 'ml' | 'mg' | 'bolus';
+
+  doseUnit:
+    | 'ml'
+    | 'mg'
+    | 'bolus';
 
   route: string;
   frequency: string;
-
   startDate: string;
   endDate: string;
   lastDoseDate: string;
-
   withdrawalDays: number;
   clearanceDate: string;
-
   veterinarian: string;
   vetRegNumber: string;
 
@@ -147,57 +162,39 @@ export interface TreatmentRecord {
   symptoms?: string;
 }
 
-// ---------------------------------------------------------
-// ALERT ITEM
-// Smart Alerts screen aur App.tsx (handleAddTreatment) mein
-// jo alert object banta hai, uska shape yahi hai.
-// ---------------------------------------------------------
 export interface AlertItem {
   id: string;
 
-  // Alert kitna serious hai â€” SmartAlertsScreen isi se
-  // icon/color/filter decide karta hai
-  type: 'critical' | 'warning' | 'action_required' | 'review_required';
+  type:
+    | 'critical'
+    | 'warning'
+    | 'action_required'
+    | 'review_required';
 
   title: string;
   description: string;
-
   animalId: string;
-
-  // App.tsx ke andar new alert banate waqt animalTag bhi use hota hai,
-  // lekin mockData ke purane alerts mein ye field nahi hai â€”
-  // isliye optional (?) rakha hai
   animalTag?: string;
-
   farm: string;
   timestamp: string;
-
   recommendedAction: string;
   actionButtonLabel: string;
-
-  // User ne alert ko "Acknowledge/Reviewed" kiya ya nahi
-  // (optional â€” jab tak review na ho, ye undefined/false rahega)
   reviewed?: boolean;
 }
 
-
-// ---------------------------------------------------------
-// VETERINARY CASE â€” TIMELINE ENTRY
-// Ek case ke andar timeline ka ek single step (chhota part)
-// ---------------------------------------------------------
 export interface VetCaseTimelineEntry {
   id: string;
   timestamp: string;
   title: string;
   description: string;
-  type: 'diagnosis' | 'treatment' | 'alert' | 'escalation';
+
+  type:
+    | 'diagnosis'
+    | 'treatment'
+    | 'alert'
+    | 'escalation';
 }
 
-
-// ---------------------------------------------------------
-// VETERINARY CASE â€” ANTIMICROBIAL HISTORY ENTRY
-// Case ke andar purani antimicrobial doses ki history
-// ---------------------------------------------------------
 export interface AntimicrobialHistoryEntry {
   id: string;
   drug: string;
@@ -205,17 +202,9 @@ export interface AntimicrobialHistoryEntry {
   doseRoute: string;
   date: string;
   vet: string;
-
-  // HP-CIA = Highest Priority Critically Important Antimicrobial
-  // (special high-risk category ka flag)
   isHpCia: boolean;
 }
 
-
-// ---------------------------------------------------------
-// VETERINARY CASE (main case object)
-// VeterinaryCaseScreen aur VeterinaryReviewScreen isko use karte hain
-// ---------------------------------------------------------
 export interface VeterinaryCase {
   id: string;
   animalId: string;
@@ -226,21 +215,18 @@ export interface VeterinaryCase {
   weight: number;
   farmName: string;
 
-  riskLevel: 'Low' | 'Medium' | 'High';
+  riskLevel:
+    | 'Low'
+    | 'Medium'
+    | 'High';
 
   primaryConcern: string;
   lastTreatment: string;
   lastTreatmentDate: string;
-
   withdrawalStatus: string;
   withdrawalDaysLeft: number;
-
-  // Iske exact values fixed nahi hain (Negative, Moderate, etc.)
-  // isliye abhi plain string rakha hai â€” future mein tight kar sakte hain
   stewardshipImpact: string;
-
   imageUrl: string;
-
   timeline: VetCaseTimelineEntry[];
   antimicrobialHistory: AntimicrobialHistoryEntry[];
 }

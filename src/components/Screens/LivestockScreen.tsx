@@ -1,4 +1,5 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
+
 import {
   Search,
   Plus,
@@ -9,38 +10,72 @@ import {
   AlertTriangle
 } from 'lucide-react';
 
-import { Animal, ScreenId } from '../../types';
+import {
+  Animal,
+  ScreenId
+} from '../../types';
+
 
 const API_BASE_URL =
   import.meta.env.VITE_API_URL ||
   'http://localhost:5000';
 
+
 interface LivestockScreenProps {
   animals: Animal[];
-  onSelectAnimal: (animal: Animal) => void;
-  onNavigate: (screen: ScreenId) => void;
-  onRegisterAnimal: (newAnimal: Animal) => void;
+
+  onSelectAnimal:
+    (animal: Animal) => void;
+
+  onNavigate:
+    (screen: ScreenId) => void;
+
+  onRegisterAnimal:
+    (newAnimal: Animal) => void;
+
+  onDeleteAnimal:
+    (animalId: string) => void;
 }
 
-export const LivestockScreen: React.FC<LivestockScreenProps> = ({
+
+export const LivestockScreen:
+React.FC<LivestockScreenProps> = ({
   animals,
   onSelectAnimal,
   onNavigate,
-  onRegisterAnimal
+  onRegisterAnimal,
+  onDeleteAnimal
 }) => {
-  const [search, setSearch] = useState('');
-  const [speciesFilter, setSpeciesFilter] = useState('All');
-  const [statusFilter, setStatusFilter] = useState('All');
-  const [withdrawalFilter, setWithdrawalFilter] = useState('All');
 
-  const [isRegisterModalOpen, setIsRegisterModalOpen] =
-    useState(false);
-
-  const [deletingAnimalId, setDeletingAnimalId] =
-    useState<string | null>(null);
-
-  const [deleteError, setDeleteError] =
+  const [search, setSearch] =
     useState('');
+
+  const [speciesFilter, setSpeciesFilter] =
+    useState('All');
+
+  const [statusFilter, setStatusFilter] =
+    useState('All');
+
+  const [
+    withdrawalFilter,
+    setWithdrawalFilter
+  ] = useState('All');
+
+  const [
+    isRegisterModalOpen,
+    setIsRegisterModalOpen
+  ] = useState(false);
+
+  const [
+    deletingAnimalId,
+    setDeletingAnimalId
+  ] = useState<string | null>(null);
+
+  const [
+    deleteError,
+    setDeleteError
+  ] = useState('');
+
 
   /* =========================================================
      NEW ANIMAL FORM
@@ -49,7 +84,10 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
   const [newTag, setNewTag] =
     useState('UK-72819-339');
 
-  const [newSpecies, setNewSpecies] = useState<
+  const [
+    newSpecies,
+    setNewSpecies
+  ] = useState<
     | 'Cattle'
     | 'Buffalo'
     | 'Goat'
@@ -60,7 +98,14 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
     | 'Camel'
   >('Cattle');
 
-  const breedOptions: Record<string, string[]> = {
+
+  /* =========================================================
+     BREED OPTIONS
+  ========================================================= */
+
+  const breedOptions:
+  Record<string, string[]> = {
+
     Cattle: [
       'Sahiwal',
       'Gir',
@@ -125,11 +170,158 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
     ]
   };
 
+
+  /* =========================================================
+     EXACT WIKIPEDIA BREED PAGES
+  ========================================================= */
+
+  const breedWikipediaPages:
+  Record<string, string> = {
+
+    // CATTLE
+    Sahiwal:
+      'Sahiwal_cattle',
+
+    Gir:
+      'Gir_cattle',
+
+    'Red Sindhi':
+      'Red_Sindhi',
+
+    Tharparkar:
+      'Tharparkar_cattle',
+
+    'Holstein Friesian':
+      'Holstein_Friesian',
+
+    Jersey:
+      'Jersey_cattle',
+
+
+    // BUFFALO
+    Murrah:
+      'Murrah_buffalo',
+
+    'Nili-Ravi':
+      'Nili-Ravi',
+
+    Jaffarabadi:
+      'Jafarabadi_buffalo',
+
+    Mehsana:
+      'Mehsana_buffalo',
+
+    Surti:
+      'Surti_buffalo',
+
+
+    // GOAT
+    Jamunapari:
+      'Jamnapari_goat',
+
+    Beetal:
+      'Beetal',
+
+    Barbari:
+      'Barbari_goat',
+
+    'Black Bengal':
+      'Black_Bengal_goat',
+
+    Sirohi:
+      'Sirohi_goat',
+
+
+    // SHEEP
+    Marwari:
+      'Marwari_sheep',
+
+    Malpura:
+      'Malpura_sheep',
+
+    Deccani:
+      'Deccani_sheep',
+
+    Nellore:
+      'Nellore_sheep',
+
+    Garole:
+      'Garole',
+
+
+    // PIG
+    'Large White Yorkshire':
+      'Large_White_pig',
+
+    Landrace:
+      'Danish_Landrace',
+
+    Hampshire:
+      'Hampshire_pig',
+
+    Duroc:
+      'Duroc_pig',
+
+    Ghungroo:
+      'Ghungroo_pig',
+
+
+    // CHICKEN
+    Kadaknath:
+      'Kadaknath',
+
+    Aseel:
+      'Asil_chicken',
+
+    Vanaraja:
+      'Vanaraja',
+
+    Gramapriya:
+      'Gramapriya',
+
+    Leghorn:
+      'Leghorn_chicken',
+
+
+    // DUCK
+    'Khaki Campbell':
+      'Khaki_Campbell',
+
+    'Indian Runner':
+      'Indian_Runner_duck',
+
+    'White Pekin':
+      'American_Pekin',
+
+    Muscovy:
+      'Muscovy_duck',
+
+
+    // CAMEL
+    Bikaneri:
+      'Bikaneri_camel',
+
+    Jaisalmeri:
+      'Jaisalmeri_camel',
+
+    Kachchhi:
+      'Kachchhi_camel',
+
+    Mewari:
+      'Mewari_camel'
+  };
+
+
   const [newBreed, setNewBreed] =
     useState('Sahiwal');
 
-  const [newGender, setNewGender] =
-    useState<'Female' | 'Male'>('Female');
+  const [
+    newGender,
+    setNewGender
+  ] = useState<
+    'Female' |
+    'Male'
+  >('Female');
 
   const [newAge, setNewAge] =
     useState('3.5 years');
@@ -140,63 +332,88 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
   const [newName, setNewName] =
     useState('Kasturi');
 
+
   /* =========================================================
      FILTER ANIMALS
   ========================================================= */
 
-  const filteredAnimals = animals.filter((a) => {
-    const matchesSearch =
-      a.id
-        .toLowerCase()
-        .includes(search.toLowerCase()) ||
+  const filteredAnimals =
+    animals.filter((a) => {
 
-      a.tag
-        .toLowerCase()
-        .includes(search.toLowerCase()) ||
+      const searchText =
+        search.toLowerCase();
 
-      (a.name &&
-        a.name
+      const matchesSearch =
+        a.id
           .toLowerCase()
-          .includes(search.toLowerCase())) ||
+          .includes(searchText)
 
-      a.breed
-        .toLowerCase()
-        .includes(search.toLowerCase());
+        ||
 
-    const matchesSpecies =
-      speciesFilter === 'All' ||
-      a.species === speciesFilter;
+        a.tag
+          .toLowerCase()
+          .includes(searchText)
 
-    const matchesStatus =
-      statusFilter === 'All' ||
-      a.healthStatus === statusFilter;
+        ||
 
-    const matchesWithdrawal =
-      withdrawalFilter === 'All' ||
+        (
+          a.name &&
+          a.name
+            .toLowerCase()
+            .includes(searchText)
+        )
 
-      (
-        withdrawalFilter === 'Active' &&
-        a.withdrawalStatus === 'Active'
-      ) ||
+        ||
 
-      (
-        withdrawalFilter === 'Clear' &&
-        a.withdrawalStatus !== 'Active'
+        a.breed
+          .toLowerCase()
+          .includes(searchText);
+
+
+      const matchesSpecies =
+        speciesFilter === 'All' ||
+        a.species === speciesFilter;
+
+
+      const matchesStatus =
+        statusFilter === 'All' ||
+        a.healthStatus === statusFilter;
+
+
+      const matchesWithdrawal =
+        withdrawalFilter === 'All'
+
+        ||
+
+        (
+          withdrawalFilter === 'Active' &&
+          a.withdrawalStatus === 'Active'
+        )
+
+        ||
+
+        (
+          withdrawalFilter === 'Clear' &&
+          a.withdrawalStatus !== 'Active'
+        );
+
+
+      return (
+        matchesSearch &&
+        matchesSpecies &&
+        matchesStatus &&
+        matchesWithdrawal
       );
+    });
 
-    return (
-      matchesSearch &&
-      matchesSpecies &&
-      matchesStatus &&
-      matchesWithdrawal
-    );
-  });
 
   /* =========================================================
-     SPECIES IMAGES
+     SPECIES FALLBACK IMAGES
   ========================================================= */
 
-  const speciesImages: Record<string, string> = {
+  const speciesImages:
+  Record<string, string> = {
+
     Cattle:
       'https://commons.wikimedia.org/wiki/Special:FilePath/Cow_female_black_white.jpg',
 
@@ -222,193 +439,557 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
       'https://commons.wikimedia.org/wiki/Special:FilePath/Camelus_dromedarius.jpg'
   };
 
+
+  /* =========================================================
+     BREED IMAGE CACHE
+  ========================================================= */
+
+  const [
+    breedImages,
+    setBreedImages
+  ] = useState<
+    Record<string, string>
+  >({});
+
+
+  /* =========================================================
+     LOAD EXACT BREED IMAGES
+
+     IMPORTANT:
+     No Wikimedia keyword search is used.
+
+     Only valid species + breed combinations
+     are allowed to request breed images.
+  ========================================================= */
+
+  useEffect(() => {
+
+    let cancelled =
+      false;
+
+
+    const loadBreedImages =
+      async () => {
+
+        const breedsToLoad =
+          Array.from(
+            new Set(
+              animals
+                .filter((animal) => {
+
+                  const validBreeds =
+                    breedOptions[
+                      animal.species
+                    ] || [];
+
+                  return (
+                    Boolean(animal.breed) &&
+                    validBreeds.includes(
+                      animal.breed
+                    )
+                  );
+                })
+
+                .map(
+                  (animal) =>
+                    animal.breed
+                )
+            )
+          );
+
+
+        for (
+          const breed
+          of breedsToLoad
+        ) {
+
+          if (
+            breedImages[breed]
+          ) {
+            continue;
+          }
+
+
+          const wikipediaPage =
+            breedWikipediaPages[
+              breed
+            ];
+
+
+          if (!wikipediaPage) {
+            continue;
+          }
+
+
+          try {
+
+            const response =
+              await fetch(
+                `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(
+                  wikipediaPage
+                )}`
+              );
+
+
+            if (!response.ok) {
+              continue;
+            }
+
+
+            const data:
+              any =
+                await response.json();
+
+
+            const imageUrl =
+              data
+                ?.thumbnail
+                ?.source
+
+              ||
+
+              data
+                ?.originalimage
+                ?.source;
+
+
+            if (
+              imageUrl &&
+              !cancelled
+            ) {
+
+              setBreedImages(
+                (prev) => ({
+                  ...prev,
+                  [breed]:
+                    imageUrl
+                })
+              );
+            }
+
+          } catch (error) {
+
+            console.warn(
+              `Breed image loading failed for ${breed}:`,
+              error
+            );
+          }
+        }
+      };
+
+
+    loadBreedImages();
+
+
+    return () => {
+      cancelled = true;
+    };
+
+  }, [animals]);
+
+
+  /* =========================================================
+     CHECK VALID BREED
+  ========================================================= */
+
+  const isValidBreedForSpecies =
+    (
+      species: string,
+      breed: string
+    ) => {
+
+      const validBreeds =
+        breedOptions[
+          species
+        ] || [];
+
+      return validBreeds.includes(
+        breed
+      );
+    };
+
+
+  /* =========================================================
+     GET ANIMAL IMAGE
+
+     Valid:
+     Cattle + Sahiwal
+       -> Sahiwal breed image
+
+     Invalid:
+     Camel + Sahiwal
+       -> Camel fallback
+
+     This prevents wrong breed photos.
+  ========================================================= */
+
+  const getAnimalImage =
+    (
+      animal: Animal
+    ) => {
+
+      const isValid =
+        isValidBreedForSpecies(
+          animal.species,
+          animal.breed
+        );
+
+
+      if (
+        isValid &&
+        breedImages[
+          animal.breed
+        ]
+      ) {
+
+        return breedImages[
+          animal.breed
+        ];
+      }
+
+
+      /*
+        IMPORTANT:
+
+        species image comes BEFORE
+        animal.imageUrl.
+
+        Old records may have stored
+        incorrect Sahiwal/book/map URLs.
+
+        Therefore invalid combinations
+        must never reuse old imageUrl.
+      */
+
+      if (!isValid) {
+
+        return (
+          speciesImages[
+            animal.species
+          ]
+
+          ||
+
+          `https://placehold.co/640x480/17202c/95d3ba?text=${encodeURIComponent(
+            animal.species
+          )}`
+        );
+      }
+
+
+      return (
+        breedImages[
+          animal.breed
+        ]
+
+        ||
+
+        animal.imageUrl
+
+        ||
+
+        speciesImages[
+          animal.species
+        ]
+
+        ||
+
+        `https://placehold.co/640x480/17202c/95d3ba?text=${encodeURIComponent(
+          animal.species
+        )}`
+      );
+    };
+
+
+  /* =========================================================
+     GET NEW ANIMAL IMAGE
+  ========================================================= */
+
+  const getNewAnimalImage =
+    () => {
+
+      return (
+        breedImages[
+          newBreed
+        ]
+
+        ||
+
+        speciesImages[
+          newSpecies
+        ]
+
+        ||
+
+        `https://placehold.co/640x480/17202c/95d3ba?text=${encodeURIComponent(
+          newSpecies
+        )}`
+      );
+    };
+
+
   /* =========================================================
      IMAGE FALLBACK
   ========================================================= */
 
-  const handleImageError = (
-    e: React.SyntheticEvent<HTMLImageElement>,
-    species: string
-  ) => {
-    const image =
-      e.currentTarget;
+  const handleImageError =
+    (
+      e:
+        React.SyntheticEvent<
+          HTMLImageElement
+        >,
 
-    if (
-      image.dataset.fallbackApplied ===
-      'true'
-    ) {
-      image.style.display =
-        'none';
+      species:
+        string
+    ) => {
 
-      return;
-    }
+      const image =
+        e.currentTarget;
 
-    image.dataset.fallbackApplied =
-      'true';
 
-    image.src =
-      `https://placehold.co/640x480/17202c/95d3ba?text=${encodeURIComponent(
-        species
-      )}`;
-  };
+      if (
+        image.dataset
+          .fallbackApplied ===
+        'true'
+      ) {
+
+        image.style.display =
+          'none';
+
+        return;
+      }
+
+
+      image.dataset
+        .fallbackApplied =
+          'true';
+
+
+      const fallback =
+        speciesImages[
+          species
+        ];
+
+
+      if (
+        fallback &&
+        image.src !== fallback
+      ) {
+
+        image.src =
+          fallback;
+
+        return;
+      }
+
+
+      image.src =
+        `https://placehold.co/640x480/17202c/95d3ba?text=${encodeURIComponent(
+          species
+        )}`;
+    };
+
 
   /* =========================================================
      CREATE ANIMAL
   ========================================================= */
 
-  const handleCreateAnimal = (
-    e: React.FormEvent
-  ) => {
-    e.preventDefault();
+  const handleCreateAnimal =
+    (
+      e:
+        React.FormEvent
+    ) => {
 
-    const newAnimalObj: Animal = {
-      id:
-        `ANM-${Math.floor(
-          Math.random() * 9000 + 1000
-        )}`,
+      e.preventDefault();
 
-      tag:
-        newTag,
 
-      name:
-        newName,
+      const newAnimalObj:
+      Animal = {
 
-      species:
-        newSpecies,
+        id:
+          `ANM-${Math.floor(
+            Math.random() *
+              9000 +
+              1000
+          )}`,
 
-      breed:
-        newBreed,
+        tag:
+          newTag,
 
-      gender:
-        newGender,
+        name:
+          newName,
 
-      age:
-        newAge,
+        species:
+          newSpecies,
 
-      weight:
-        Number(newWeight) || 400,
+        breed:
+          newBreed,
 
-      farmName:
-        'Shiv Dairy Farm / Pen A',
+        gender:
+          newGender,
 
-      farmId:
-        'FARM-UP-001',
+        age:
+          newAge,
 
-      healthStatus:
-        'Healthy',
+        weight:
+          Number(
+            newWeight
+          ) || 400,
 
-      withdrawalStatus:
-        'None',
+        farmName:
+          'Shiv Dairy Farm / Pen A',
 
-      riskLevel:
-        'Low',
+        farmId:
+          'FARM-UP-001',
 
-      imageUrl:
-        speciesImages[newSpecies]
+        healthStatus:
+          'Healthy',
+
+        withdrawalStatus:
+          'None',
+
+        riskLevel:
+          'Low',
+
+        imageUrl:
+          getNewAnimalImage()
+      };
+
+
+      onRegisterAnimal(
+        newAnimalObj
+      );
+
+
+      setIsRegisterModalOpen(
+        false
+      );
     };
 
-    onRegisterAnimal(
-      newAnimalObj
-    );
-
-    setIsRegisterModalOpen(
-      false
-    );
-  };
 
   /* =========================================================
      DELETE ANIMAL FROM DATABASE
   ========================================================= */
 
-  const handleDeleteAnimal = async (
-    animal: Animal
-  ) => {
-    const animalLabel =
-      animal.name
-        ? `${animal.name} (${animal.id})`
-        : animal.id;
+  const handleDeleteAnimal =
+    async (
+      animal:
+        Animal
+    ) => {
 
-    const confirmed =
-      window.confirm(
-        `Delete ${animalLabel} permanently from the livestock database?\n\nThis action cannot be undone.`
-      );
+      const animalLabel =
+        animal.name
+          ? `${animal.name} (${animal.id})`
+          : animal.id;
 
-    if (!confirmed) {
-      return;
-    }
 
-    try {
-      setDeleteError('');
-
-      setDeletingAnimalId(
-        animal.id
-      );
-
-      const response =
-        await fetch(
-          `${API_BASE_URL}/api/animals/${encodeURIComponent(
-            animal.id
-          )}`,
-          {
-            method: 'DELETE',
-            headers: {
-              'Content-Type':
-                'application/json'
-            }
-          }
+      const confirmed =
+        window.confirm(
+          `Delete ${animalLabel} permanently from the livestock database?\n\nThis action cannot be undone.`
         );
 
-      let result: any =
-        null;
+
+      if (!confirmed) {
+        return;
+      }
+
 
       try {
-        result =
-          await response.json();
-      } catch {
-        result =
-          null;
-      }
 
-      if (!response.ok) {
-        throw new Error(
-          result?.message ||
-          result?.error ||
-          `Delete failed (${response.status})`
+        setDeleteError(
+          ''
+        );
+
+
+        setDeletingAnimalId(
+          animal.id
+        );
+
+
+        const response =
+          await fetch(
+            `${API_BASE_URL}/api/animals/${encodeURIComponent(
+              animal.id
+            )}`,
+            {
+              method:
+                'DELETE',
+
+              headers: {
+                'Content-Type':
+                  'application/json'
+              }
+            }
+          );
+
+
+        let result:
+          any =
+            null;
+
+
+        try {
+
+          result =
+            await response.json();
+
+        } catch {
+
+          result =
+            null;
+        }
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            result?.message ||
+            result?.error ||
+            `Delete failed (${response.status})`
+          );
+        }
+
+
+        onDeleteAnimal(
+          animal.id
+        );
+
+
+        setDeleteError(
+          ''
+        );
+
+      } catch (error) {
+
+        console.error(
+          'Animal delete error:',
+          error
+        );
+
+
+        setDeleteError(
+          error instanceof Error
+            ? error.message
+            : 'Failed to delete animal.'
+        );
+
+      } finally {
+
+        setDeletingAnimalId(
+          null
         );
       }
+    };
 
-      /*
-        Simple and reliable for demo:
-        reload -> animals fetched fresh from backend/database.
-      */
-
-      window.location.reload();
-
-    } catch (error) {
-      console.error(
-        'Animal delete error:',
-        error
-      );
-
-      setDeleteError(
-        error instanceof Error
-          ? error.message
-          : 'Failed to delete animal.'
-      );
-
-    } finally {
-      setDeletingAnimalId(
-        null
-      );
-    }
-  };
 
   /* =========================================================
      UI
   ========================================================= */
 
   return (
+
     <div className="space-y-6 pb-12">
+
 
       {/* HEADER */}
 
@@ -428,6 +1009,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
 
         </div>
 
+
         <button
           id="btn-open-register-modal"
           onClick={() =>
@@ -445,6 +1027,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
         </button>
 
       </div>
+
 
       {/* DELETE ERROR */}
 
@@ -467,8 +1050,8 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
           </div>
 
         </div>
-
       )}
+
 
       {/* FILTER BAR */}
 
@@ -481,7 +1064,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
           <input
             id="livestock-search"
             type="text"
-            placeholder="Search by ID, Tag, or Name..."
+            placeholder="Search by ID, Tag, Name, or Breed..."
             value={search}
             onChange={(e) =>
               setSearch(
@@ -492,6 +1075,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
           />
 
         </div>
+
 
         <select
           value={speciesFilter}
@@ -541,6 +1125,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
 
         </select>
 
+
         <select
           value={statusFilter}
           onChange={(e) =>
@@ -573,6 +1158,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
 
         </select>
 
+
         <select
           value={withdrawalFilter}
           onChange={(e) =>
@@ -599,9 +1185,11 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
 
       </div>
 
+
       {/* ANIMAL GRID */}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+
 
         {/* REGISTER CARD */}
 
@@ -620,9 +1208,11 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
 
           </div>
 
+
           <span className="text-base font-bold text-primary">
             Register Animal
           </span>
+
 
           <p className="text-xs text-on-surface-variant mt-1.5 max-w-[200px]">
             Add a new animal to the farm herd with
@@ -630,6 +1220,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
           </p>
 
         </button>
+
 
         {/* EXISTING ANIMALS */}
 
@@ -648,17 +1239,20 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
 
               <div>
 
+
                 {/* IMAGE */}
 
                 <div className="relative mb-3.5 overflow-hidden rounded-xl h-40 bg-surface-container">
 
                   <img
                     src={
-                      speciesImages[
-                        animal.species
-                      ]
+                      getAnimalImage(
+                        animal
+                      )
                     }
-                    alt={`${animal.species} ${animal.id}`}
+                    alt={
+                      `${animal.breed} ${animal.species} ${animal.id}`
+                    }
                     onError={(e) =>
                       handleImageError(
                         e,
@@ -667,6 +1261,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
                     }
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
+
 
                   {/* ID */}
 
@@ -679,6 +1274,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
                     </span>
 
                   </div>
+
 
                   {/* WITHDRAWAL */}
 
@@ -713,6 +1309,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
 
                 </div>
 
+
                 {/* NAME / STATUS */}
 
                 <div className="flex items-start justify-between gap-2">
@@ -720,10 +1317,8 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
                   <div>
 
                     <h3 className="text-base font-bold text-primary">
-
                       {animal.name ||
                         animal.id}
-
                     </h3>
 
                     <p className="text-xs text-outline font-mono">
@@ -731,6 +1326,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
                     </p>
 
                   </div>
+
 
                   <span
                     className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${
@@ -759,6 +1355,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
 
                 </div>
 
+
                 {/* DETAILS */}
 
                 <div className="mt-3 text-xs text-on-surface-variant space-y-1">
@@ -774,6 +1371,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
 
                   </p>
 
+
                   <p>
 
                     <strong className="text-on-surface">
@@ -786,6 +1384,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
 
                   </p>
 
+
                   <p className="truncate">
 
                     <strong className="text-on-surface">
@@ -795,6 +1394,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
                     {animal.farmName}
 
                   </p>
+
 
                   <p className="truncate">
 
@@ -811,6 +1411,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
 
               </div>
 
+
               {/* FOOTER */}
 
               <div className="mt-4 pt-3 border-t border-outline-variant/40 flex items-center justify-between gap-2">
@@ -821,7 +1422,9 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
 
                 </span>
 
+
                 <div className="flex items-center gap-2">
+
 
                   {/* DELETE BUTTON */}
 
@@ -832,6 +1435,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
                       animal.id
                     }
                     onClick={(e) => {
+
                       e.stopPropagation();
 
                       handleDeleteAnimal(
@@ -850,6 +1454,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
 
                   </button>
 
+
                   {/* VIEW RECORD */}
 
                   <span className="text-xs font-bold text-primary group-hover:text-secondary flex items-center gap-1">
@@ -867,11 +1472,11 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
               </div>
 
             </div>
-
           )
         )}
 
       </div>
+
 
       {/* REGISTER ANIMAL MODAL */}
 
@@ -881,15 +1486,15 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
 
           <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
 
+
             {/* HEADER */}
 
             <div className="flex items-center justify-between pb-4 border-b border-outline-variant/60">
 
               <h3 className="text-lg font-bold text-primary">
-
                 Register Livestock Ear Tag
-
               </h3>
+
 
               <button
                 type="button"
@@ -907,6 +1512,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
 
             </div>
 
+
             {/* FORM */}
 
             <form
@@ -915,6 +1521,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
               }
               className="mt-4 space-y-3.5"
             >
+
 
               <div className="grid grid-cols-2 gap-3">
 
@@ -938,6 +1545,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
 
                 </div>
 
+
                 <div>
 
                   <label className="block text-xs font-bold text-on-surface-variant mb-1">
@@ -959,6 +1567,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
 
               </div>
 
+
               {/* SPECIES / BREED */}
 
               <div className="grid grid-cols-2 gap-3">
@@ -972,9 +1581,11 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
                   <select
                     value={newSpecies}
                     onChange={(e) => {
+
                       const species =
                         e.target
-                          .value as typeof newSpecies;
+                          .value as
+                          typeof newSpecies;
 
                       setNewSpecies(
                         species
@@ -989,18 +1600,42 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
                     className="w-full px-3 py-2 rounded-xl border border-outline-variant text-xs bg-surface-container-low text-on-surface"
                   >
 
-                    <option value="Cattle">Cattle</option>
-                    <option value="Buffalo">Buffalo</option>
-                    <option value="Goat">Goat</option>
-                    <option value="Sheep">Sheep</option>
-                    <option value="Pig">Pig</option>
-                    <option value="Chicken">Chicken</option>
-                    <option value="Duck">Duck</option>
-                    <option value="Camel">Camel</option>
+                    <option value="Cattle">
+                      Cattle
+                    </option>
+
+                    <option value="Buffalo">
+                      Buffalo
+                    </option>
+
+                    <option value="Goat">
+                      Goat
+                    </option>
+
+                    <option value="Sheep">
+                      Sheep
+                    </option>
+
+                    <option value="Pig">
+                      Pig
+                    </option>
+
+                    <option value="Chicken">
+                      Chicken
+                    </option>
+
+                    <option value="Duck">
+                      Duck
+                    </option>
+
+                    <option value="Camel">
+                      Camel
+                    </option>
 
                   </select>
 
                 </div>
+
 
                 <div>
 
@@ -1027,9 +1662,10 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
                           key={breed}
                           value={breed}
                         >
-                          {breed}
-                        </option>
 
+                          {breed}
+
+                        </option>
                       )
                     )}
 
@@ -1038,6 +1674,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
                 </div>
 
               </div>
+
 
               {/* GENDER / AGE / WEIGHT */}
 
@@ -1073,6 +1710,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
 
                 </div>
 
+
                 <div>
 
                   <label className="block text-xs font-bold text-on-surface-variant mb-1">
@@ -1091,6 +1729,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
                   />
 
                 </div>
+
 
                 <div>
 
@@ -1113,6 +1752,7 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
 
               </div>
 
+
               {/* BUTTONS */}
 
               <div className="pt-4 flex justify-end gap-2">
@@ -1126,14 +1766,19 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
                   }
                   className="px-4 py-2 border border-outline-variant rounded-xl text-xs font-bold text-on-surface hover:bg-surface-container"
                 >
+
                   Cancel
+
                 </button>
+
 
                 <button
                   type="submit"
                   className="px-5 py-2 bg-primary hover:bg-primary-container text-on-primary rounded-xl text-xs font-bold shadow-sm"
                 >
+
                   Confirm Registration
+
                 </button>
 
               </div>
@@ -1143,7 +1788,6 @@ export const LivestockScreen: React.FC<LivestockScreenProps> = ({
           </div>
 
         </div>
-
       )}
 
     </div>

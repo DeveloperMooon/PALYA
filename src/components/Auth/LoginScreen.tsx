@@ -75,20 +75,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
     }
   };
 
-  // Quick helper to fill test credentials
-  const fillDemoCredentials = (role: 'farmer' | 'vet') => {
-    if (role === 'farmer') {
-      setMobileNumber('9876543210');
-      setPassword('password123');
-    } else {
-      setMobileNumber('9123456789');
-      setPassword('password123');
-    }
-    setMobileTouched(false);
-    setPasswordTouched(false);
-    setErrorMessage(null);
-  };
-
+  
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between px-4 sm:px-6 py-8">
       {/* Top Header & Branding */}
@@ -292,29 +279,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             </p>
           </div>
 
-          {/* Demo Quick Fill Helper */}
-          <div className="mt-5 p-3 rounded-2xl bg-slate-50 border border-slate-200 text-[11px] text-slate-500 flex flex-col gap-1.5">
-            <div className="flex items-center justify-between font-semibold text-slate-700">
-              <span>Quick Demo Sign-In:</span>
-              <span className="text-[10px] text-slate-400">Pass: password123</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => fillDemoCredentials('farmer')}
-                className="flex-1 py-1.5 px-2 rounded-xl bg-white border border-slate-200 hover:border-emerald-500 font-bold text-slate-700 hover:text-[#16A34A] transition-colors cursor-pointer text-center"
-              >
-                Farmer (Rajesh)
-              </button>
-              <button
-                type="button"
-                onClick={() => fillDemoCredentials('vet')}
-                className="flex-1 py-1.5 px-2 rounded-xl bg-white border border-slate-200 hover:border-emerald-500 font-bold text-slate-700 hover:text-[#16A34A] transition-colors cursor-pointer text-center"
-              >
-                Veterinarian (Dr. Suresh)
-              </button>
-            </div>
-          </div>
+          
         </motion.div>
       </div>
 

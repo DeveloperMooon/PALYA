@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 
 import {
   Plus,
@@ -21,7 +21,8 @@ import {
   Animal,
   ScreenId,
   TreatmentRecord,
-  AlertItem
+  AlertItem,
+  AuthUser
 } from '../../types';
 
 interface FarmerDashboardProps {
@@ -44,6 +45,7 @@ interface FarmerDashboardProps {
   userRole?:
     | 'farmer'
     | 'veterinarian';
+    authUser?: AuthUser | null;
 }
 
 export function FarmerDashboard({
@@ -53,7 +55,8 @@ export function FarmerDashboard({
   onSelectAnimal,
   treatments,
   alerts,
-  userRole = 'farmer'
+  userRole = 'farmer',
+  authUser
 }: FarmerDashboardProps) {
 
   const [
@@ -67,9 +70,44 @@ export function FarmerDashboard({
   ] = useState('All');
 
   const [
-    statusFilter,
-    setStatusFilter
-  ] = useState('All');
+  statusFilter,
+  setStatusFilter
+] = useState('All');
+
+const getGreeting = () => {
+  const hour = new Date().getHours();
+
+  if (hour >= 5 && hour < 12) {
+    return 'Good morning';
+  }
+
+  if (hour >= 12 && hour < 17) {
+    return 'Good afternoon';
+  }
+
+  return 'Good evening';
+};
+
+const getDisplayName = () => {
+  if (authUser?.role === 'admin') {
+    return 'Administrator';
+  }
+
+  const fullName = authUser?.fullName?.trim();
+
+  if (!fullName) {
+    return 'User';
+  }
+
+  const firstName = fullName
+    .replace(/^Dr\.?\s+/i, '')
+    .split(' ')[0];
+
+  return firstName || 'User';
+};
+
+const greeting = getGreeting();
+const displayName = getDisplayName();
 
   /* =========================================================
      FILTERED ANIMALS
@@ -199,12 +237,7 @@ export function FarmerDashboard({
 
           <h1 className="text-2xl sm:text-3xl font-black text-primary tracking-tight">
 
-            Good afternoon,{' '}
-
-            {userRole === 'farmer'
-              ? 'Rajesh'
-              : 'Dr. Suresh'}
-            !
+            {greeting}, {displayName}!
 
           </h1>
 
