@@ -1307,7 +1307,7 @@ export const EarlyDetectionScreen:
         );
 
       /* =====================================================
-         NEW: EXPLAINABLE RISK
+         EXPLAINABLE RISK
       ===================================================== */
 
       const highRiskTriggers =
@@ -1434,10 +1434,6 @@ export const EarlyDetectionScreen:
           result.riskLevel
         )
       : null;
-
-  /* =========================================================
-     UI
-  ========================================================= */
 
   return (
     <div className="space-y-6 pb-12">
@@ -1678,7 +1674,6 @@ export const EarlyDetectionScreen:
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3 text-xs">
 
                     <div>
-
                       <span className="text-outline">
                         Species
                       </span>
@@ -1686,11 +1681,9 @@ export const EarlyDetectionScreen:
                       <p className="font-bold text-on-surface mt-0.5">
                         {selectedAnimal.species}
                       </p>
-
                     </div>
 
                     <div>
-
                       <span className="text-outline">
                         Breed
                       </span>
@@ -1698,11 +1691,9 @@ export const EarlyDetectionScreen:
                       <p className="font-bold text-on-surface mt-0.5">
                         {selectedAnimal.breed}
                       </p>
-
                     </div>
 
                     <div>
-
                       <span className="text-outline">
                         Health
                       </span>
@@ -1710,11 +1701,9 @@ export const EarlyDetectionScreen:
                       <p className="font-bold text-on-surface mt-0.5">
                         {selectedAnimal.healthStatus}
                       </p>
-
                     </div>
 
                     <div>
-
                       <span className="text-outline">
                         Risk
                       </span>
@@ -1722,7 +1711,6 @@ export const EarlyDetectionScreen:
                       <p className="font-bold text-on-surface mt-0.5">
                         {selectedAnimal.riskLevel}
                       </p>
-
                     </div>
 
                   </div>
@@ -1767,8 +1755,6 @@ export const EarlyDetectionScreen:
 
             </div>
 
-            {/* SEARCH */}
-
             <div className="relative mt-4">
 
               <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-outline" />
@@ -1788,8 +1774,6 @@ export const EarlyDetectionScreen:
               />
 
             </div>
-
-            {/* SYMPTOM GRID */}
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
 
@@ -1841,6 +1825,7 @@ export const EarlyDetectionScreen:
                       </div>
 
                     </button>
+
                   );
                 }
               )}
@@ -1889,8 +1874,6 @@ export const EarlyDetectionScreen:
         <div className="xl:col-span-5">
 
           <section className="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-xs p-5 sm:p-6 xl:sticky xl:top-24">
-
-            {/* HEADER */}
 
             <div className="flex items-center gap-2 pb-4 border-b border-outline-variant/40">
 
@@ -1991,72 +1974,29 @@ export const EarlyDetectionScreen:
 
                   </div>
 
-                  <div className="mt-4">
-
-                    <div className="flex justify-between text-xs mb-1.5">
-
-                      <span className="font-bold text-on-surface-variant">
-                        Pattern match
-                      </span>
-
-                      <span className="font-black text-primary">
-                        {result.confidence}%
-                      </span>
-
-                    </div>
-
-                    <div className="h-2 rounded-full bg-surface-container overflow-hidden">
-
-                      <div
-                        className="h-full bg-primary rounded-full"
-
-                        style={{
-                          width:
-                            `${result.confidence}%`
-                        }}
-                      />
-
-                    </div>
-
-                  </div>
-
                 </div>
 
                 {/* ==========================================
-                    2. NEW EXPLAINABLE RISK DECISION
+                    2. EXPLAINABLE RISK DECISION
                 ========================================== */}
 
                 <div className="p-4 rounded-xl border border-outline-variant bg-surface-container-low">
 
-                  <div className="flex items-center justify-between gap-3">
+                  <div>
 
-                    <div>
+                    <h4 className="text-xs font-black uppercase tracking-wide text-primary">
 
-                      <h4 className="text-xs font-black uppercase tracking-wide text-primary">
+                      Explainable Risk Decision
 
-                        Explainable Risk Decision
+                    </h4>
 
-                      </h4>
+                    <p className="text-xs text-on-surface-variant mt-1">
 
-                      <p className="text-xs text-on-surface-variant mt-1">
+                      Transparent reasoning behind the screening result.
 
-                        Transparent reasoning behind the screening result.
-
-                      </p>
-
-                    </div>
-
-                    <span
-                      className={`px-2.5 py-1 rounded-full text-[10px] font-black ${riskStyles?.badge}`}
-                    >
-
-                      {result.riskLevel} Risk
-
-                    </span>
+                    </p>
 
                   </div>
-
-                  {/* MATCHED + CONFIDENCE */}
 
                   <div className="grid grid-cols-2 gap-3 mt-4">
 
@@ -2097,8 +2037,6 @@ export const EarlyDetectionScreen:
 
                   </div>
 
-                  {/* HIGH RISK TRIGGER */}
-
                   <div className="mt-4 space-y-3">
 
                     <div className="flex items-start gap-3">
@@ -2128,8 +2066,6 @@ export const EarlyDetectionScreen:
 
                     </div>
 
-                    {/* ESCALATION */}
-
                     <div className="flex items-start gap-3">
 
                       <div className="min-w-[110px]">
@@ -2153,8 +2089,6 @@ export const EarlyDetectionScreen:
 
                   </div>
 
-                  {/* REASON */}
-
                   {result.riskReason && (
 
                     <div className="mt-4 pt-3 border-t border-outline-variant/50">
@@ -2171,9 +2105,7 @@ export const EarlyDetectionScreen:
 
                 </div>
 
-                {/* ==========================================
-                    3. WHY FLAGGED
-                ========================================== */}
+                {/* WHY FLAGGED */}
 
                 <div className="p-4 rounded-xl bg-surface-container-low border border-outline-variant/60">
 
@@ -2196,7 +2128,6 @@ export const EarlyDetectionScreen:
 
                         <span
                           key={symptom}
-
                           className="px-2 py-1 rounded-lg bg-primary-container text-on-primary-container text-[10px] font-bold"
                         >
 
@@ -2211,9 +2142,7 @@ export const EarlyDetectionScreen:
 
                 </div>
 
-                {/* ==========================================
-                    4. RECOMMENDED ACTION
-                ========================================== */}
+                {/* RECOMMENDED ACTION */}
 
                 <div className="p-4 rounded-xl border border-outline-variant bg-surface-container-lowest">
 
@@ -2243,9 +2172,7 @@ export const EarlyDetectionScreen:
 
                 </div>
 
-                {/* ==========================================
-                    5. CLINICAL REFERENCE
-                ========================================== */}
+                {/* CLINICAL REFERENCE */}
 
                 {result.sourceUrl && (
 
@@ -2280,9 +2207,7 @@ export const EarlyDetectionScreen:
 
                 )}
 
-                {/* ==========================================
-                    6. ESTIMATED TREATMENT COST
-                ========================================== */}
+                {/* ESTIMATED TREATMENT COST */}
 
                 {result.estimatedCost && (
 
@@ -2365,9 +2290,7 @@ export const EarlyDetectionScreen:
 
                 )}
 
-                {/* ==========================================
-                    SEND TO VET
-                ========================================== */}
+                {/* SEND TO VET */}
 
                 <button
                   type="button"
