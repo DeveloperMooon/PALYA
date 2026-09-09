@@ -53,7 +53,7 @@ import { FarmManagementScreen } from './components/Screens/FarmManagementScreen'
 import { RecordTreatmentScreen } from './components/Screens/RecordTreatmentScreen';
 import { LabResultScreen } from './components/Screens/LabResultScreen';
 import { AIAssistantScreen } from './components/Screens/AIAssistantScreen';
-
+import { ReportsScreen } from './components/Screens/ReportsScreen';
 
 const AUTH_SCREENS: ScreenId[] = [
   'sign-in',
@@ -961,6 +961,11 @@ const handleTagScanned = (tag: string) => {
                     }
                   />
                 )}
+                
+                {/* Reports */}
+{currentScreen === 'reports' && (
+  <ReportsScreen />
+)}
 
                 {/* AI Assistant */}
 {currentScreen ===
