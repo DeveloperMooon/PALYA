@@ -1710,12 +1710,16 @@ function AppContent() {
             }
 
             authUser={
-              effectiveAuthUser
-            }
-
-            onLogout={
-              handleLogout
-            }
+            effectiveAuthUser
+          }
+          
+          isAdminMode={
+            isAdmin
+          }
+          
+          onLogout={
+            handleLogout
+          }
           />
 
 
@@ -1764,7 +1768,11 @@ function AppContent() {
               authUser={
                 effectiveAuthUser
               }
-
+              
+              isAdminMode={
+                isAdmin
+              }
+              
               onLogout={
                 handleLogout
               }

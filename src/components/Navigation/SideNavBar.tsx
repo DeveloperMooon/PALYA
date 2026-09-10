@@ -37,6 +37,7 @@ interface SideNavBarProps {
   onToggleRole: () => void;
   alertCount: number;
   authUser?: AuthUser | null;
+  isAdminMode?: boolean;
   onLogout?: () => void;
   isMobileDrawer?: boolean;
   onClose?: () => void;
@@ -106,6 +107,7 @@ export const SideNavBar: React.FC<
   userRole,
   alertCount,
   authUser,
+  isAdminMode = false,
   onLogout,
   isMobileDrawer = false,
   onClose
@@ -315,20 +317,22 @@ export const SideNavBar: React.FC<
 
 
   const visibleNavItems =
-    navItems.filter((item) => {
+  isAdminMode
+    ? navItems
+    : navItems.filter((item) => {
 
-      if (!authUser?.role) {
-        return true;
-      }
+        if (!authUser?.role) {
+          return true;
+        }
 
-      if (!item.roles) {
-        return true;
-      }
+        if (!item.roles) {
+          return true;
+        }
 
-      return item.roles.includes(
-        authUser.role
-      );
-    });
+        return item.roles.includes(
+          authUser.role
+        );
+      });
 
 
   const handleItemClick = (
