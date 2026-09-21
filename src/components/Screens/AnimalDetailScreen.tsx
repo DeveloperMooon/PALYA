@@ -87,7 +87,7 @@ export const AnimalDetailScreen: React.FC<AnimalDetailScreenProps> = ({
               </div>
 
               <p className="text-xs text-on-surface-variant mt-1.5">
-                {animal.species} â€¢ {animal.breed} â€¢ {animal.gender} â€¢ {animal.age} â€¢ {animal.weight} kg
+                {animal.species} - {animal.breed} - {animal.gender} - {animal.age} - {animal.weight} kg
               </p>
 
               <p className="text-xs text-primary font-bold mt-1">
@@ -208,7 +208,7 @@ export const AnimalDetailScreen: React.FC<AnimalDetailScreenProps> = ({
                           <span className="text-[10px] text-outline font-mono">({trt.activeIngredient})</span>
                         </div>
                         <p className="text-on-surface-variant mt-1">
-                          {trt.condition} â€¢ {trt.dosage} ({trt.route})
+                          {trt.condition} - {trt.dosage} ({trt.route})
                         </p>
                       </div>
 
@@ -303,7 +303,7 @@ export const AnimalDetailScreen: React.FC<AnimalDetailScreenProps> = ({
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="text-sm font-bold text-primary">{trt.drug}</h3>
-                    <p className="text-xs text-on-surface-variant">{trt.activeIngredient} â€¢ {trt.dosage} ({trt.route})</p>
+                    <p className="text-xs text-on-surface-variant">{trt.activeIngredient} - {trt.dosage} ({trt.route})</p>
                     <p className="text-xs text-outline mt-1">Condition: {trt.condition}</p>
                     {trt.symptoms && <p className="text-xs text-outline">Notes: {trt.symptoms}</p>}
                   </div>
@@ -371,7 +371,7 @@ export const AnimalDetailScreen: React.FC<AnimalDetailScreenProps> = ({
             </div>
 
             <div className="text-xs font-mono font-bold text-primary mb-4">
-              {animal.id} â€¢ {animal.tag}
+              {animal.id} - {animal.tag}
             </div>
 
             <button

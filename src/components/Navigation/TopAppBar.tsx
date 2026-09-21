@@ -1,4 +1,5 @@
-﻿import React, { useState } from 'react';
+﻿import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import React, { useState } from 'react';
 
 import {
   Search,
@@ -264,10 +265,7 @@ React.FC<TopAppBarProps> = ({
   ] = useState(false);
 
 
-  const {
-    themeMode,
-    setThemeMode
-  } = useTheme();
+   const { resolvedTheme, setThemeMode } = useTheme();;
 
 
   const isAdmin =
@@ -298,45 +296,13 @@ React.FC<TopAppBarProps> = ({
     );
 
 
-  const cycleTheme =
-    () => {
+  const cycleTheme = () => {
+  setThemeMode(resolvedTheme === 'dark' ? 'light' : 'dark');
+};
 
-      if (
-        themeMode ===
-        'light'
-      ) {
+const reduceThemeMotion = useReducedMotion();
 
-        setThemeMode(
-          'dark'
-        );
-
-      } else if (
-        themeMode ===
-        'dark'
-      ) {
-
-        setThemeMode(
-          'system'
-        );
-
-      } else {
-
-        setThemeMode(
-          'light'
-        );
-
-      }
-    };
-
-
-  const ThemeIcon =
-    themeMode ===
-    'light'
-      ? Sun
-      : themeMode ===
-        'dark'
-        ? Moon
-        : Monitor;
+  const ThemeIcon = resolvedTheme === 'dark' ? Moon : Sun;
 
 
   const quickJumpResults = [
@@ -1199,7 +1165,7 @@ React.FC<TopAppBarProps> = ({
           }
 
           title={
-            `Theme: ${themeMode}`
+            `Theme: ${resolvedTheme}`
           }
 
           className="
@@ -1213,12 +1179,33 @@ React.FC<TopAppBarProps> = ({
           "
         >
 
-          <ThemeIcon
-            className="
-              w-5
-              h-5
-            "
-          />
+        <AnimatePresence initial={false} mode="wait">
+  <motion.span
+    key={resolvedTheme}
+    className="inline-flex items-center justify-center"
+    initial={
+      reduceThemeMotion
+        ? false
+        : { opacity: 0, rotate: -35, scale: 0.75 }
+    }
+    animate={{
+      opacity: 1,
+      rotate: 0,
+      scale: 1,
+    }}
+    exit={
+      reduceThemeMotion
+        ? undefined
+        : { opacity: 0, rotate: 35, scale: 0.75 }
+    }
+    transition={{
+      duration: reduceThemeMotion ? 0 : 0.14,
+      ease: 'easeOut',
+    }}
+  >
+    <ThemeIcon className="w-5 h-5" />
+  </motion.span>
+</AnimatePresence>
 
         </button>
 

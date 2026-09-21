@@ -1468,14 +1468,14 @@ export const EarlyDetectionScreen:
 
           <p className="text-sm text-on-surface-variant mt-1 max-w-3xl">
 
-            Screen species-specific livestock symptoms,
+             {/* Screen species-specific livestock symptoms,
             identify possible disease patterns and
             escalate suspicious cases for veterinary
-            review.
+            review.  */}
 
           </p>
 
-        </div>
+        </div>+
 
         <div className="px-4 py-3 rounded-xl bg-surface-container-low border border-outline-variant">
 

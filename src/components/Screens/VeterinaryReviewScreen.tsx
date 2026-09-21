@@ -132,7 +132,7 @@ export const VeterinaryReviewScreen: React.FC<VeterinaryReviewScreenProps> = ({
                     </div>
 
                     <p className="text-xs text-on-surface-variant">
-                      {vetCase.species} â€¢ {vetCase.breed} â€¢ {vetCase.age} â€¢ {vetCase.weight} kg
+                      {vetCase.species} - {vetCase.breed} - {vetCase.age} - {vetCase.weight} kg
                     </p>
 
                     <p className="text-xs font-semibold text-primary mt-1 flex items-center gap-1">

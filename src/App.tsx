@@ -1,4 +1,5 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import { SettingsScreen } from './components/Screens/SettingsScreen';
+import React, { useState, useEffect } from 'react';
 
 import {
   ScreenId,
@@ -1713,9 +1714,6 @@ function AppContent() {
             effectiveAuthUser
           }
           
-          isAdminMode={
-            isAdmin
-          }
           
           onLogout={
             handleLogout
@@ -1769,9 +1767,6 @@ function AppContent() {
                 effectiveAuthUser
               }
               
-              isAdminMode={
-                isAdmin
-              }
               
               onLogout={
                 handleLogout
@@ -2182,7 +2177,9 @@ function AppContent() {
 
                 <AIAssistantScreen />
               )}
-
+            {currentScreen === 'settings' && (
+  <SettingsScreen />
+)}
             </main>
 
           </div>

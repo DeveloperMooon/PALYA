@@ -1,4 +1,5 @@
 ﻿import React, { useEffect, useState } from 'react';
+import { useAuth } from '../../context/AuthContext';
 import {
   Stethoscope,
   ShieldCheck,
@@ -91,6 +92,12 @@ React.FC<RecordTreatmentScreenProps> = ({
   onNavigate,
   selectedAnimal
 }) => {
+
+    const { user } = useAuth();
+
+  const canEditTreatment =
+    user?.role === 'admin' ||
+    user?.role === 'veterinarian';
 
   /* =======================================================
      PATIENT
@@ -581,6 +588,13 @@ React.FC<RecordTreatmentScreenProps> = ({
       return;
     }
 
+    if (!canEditTreatment) {
+  setSaveError(
+    'Only veterinarians and administrators can edit or save treatments.'
+  );
+  return;
+}
+
     if (!matchedDrug) {
       setSaveError(
         `No valid medicine has been selected for ${currentAnimal.species}.`
@@ -857,6 +871,13 @@ React.FC<RecordTreatmentScreenProps> = ({
             onSubmit={handleSave}
             className="space-y-6"
           >
+{!canEditTreatment && (
+  <p role="status" className="text-sm text-on-surface-variant">
+    View only. Only veterinarians and administrators can edit
+    or save treatments.
+  </p>
+)}
+
 
             {/* ============================================
                 SECTION 1
@@ -900,7 +921,7 @@ React.FC<RecordTreatmentScreenProps> = ({
                         >
                           {animal.id}{' '}
                           ({animal.tag})
-                          {' â€¢ '}
+                          {' - '}
                           {animal.species}
                           {' - '}
                           {animal.name ||
@@ -936,6 +957,7 @@ React.FC<RecordTreatmentScreenProps> = ({
                       )
                     }
                     className="w-full px-3 py-2.5 rounded-xl border border-outline-variant text-sm bg-surface-container-low text-on-surface"
+                    disabled={!canEditTreatment}
                     placeholder="Enter veterinarian-assessed condition"
                     required
                   />
@@ -951,6 +973,7 @@ React.FC<RecordTreatmentScreenProps> = ({
 
                 <textarea
                   rows={2}
+                  disabled={!canEditTreatment}
                   value={
                     symptoms
                   }
@@ -973,6 +996,7 @@ React.FC<RecordTreatmentScreenProps> = ({
 
                 <input
                   type="date"
+                  disabled={!canEditTreatment}
                   value={
                     diagnosisDate
                   }
@@ -1051,9 +1075,10 @@ React.FC<RecordTreatmentScreenProps> = ({
                       )
                     }
                     disabled={
-                      medicinesLoading ||
-                      speciesMedicines.length === 0
-                    }
+                       !canEditTreatment ||
+                       medicinesLoading ||
+                       speciesMedicines.length === 0
+                     }
                     className="w-full px-3 py-2.5 rounded-xl border border-outline-variant text-sm bg-surface-container-low text-on-surface disabled:opacity-60"
                     required
                   >
@@ -1149,8 +1174,10 @@ React.FC<RecordTreatmentScreenProps> = ({
                 </label>
 
                 <select
+                disabled={!canEditTreatment}
                   value={
                     category
+                    
                   }
                   onChange={(e) =>
                     setCategory(
@@ -1192,6 +1219,7 @@ React.FC<RecordTreatmentScreenProps> = ({
 
                   <input
                     type="number"
+                    disabled={!canEditTreatment}
                     value={
                       dosage
                     }
@@ -1212,6 +1240,7 @@ React.FC<RecordTreatmentScreenProps> = ({
                   </label>
 
                   <select
+                  disabled={!canEditTreatment}
                     value={
                       doseUnit
                     }
@@ -1246,6 +1275,7 @@ React.FC<RecordTreatmentScreenProps> = ({
 
                   <input
                     type="text"
+                    disabled={!canEditTreatment}
                     value={
                       route
                     }
@@ -1268,6 +1298,7 @@ React.FC<RecordTreatmentScreenProps> = ({
                 </label>
 
                 <select
+                disabled={!canEditTreatment}
                   value={
                     frequency
                   }
@@ -1307,6 +1338,7 @@ React.FC<RecordTreatmentScreenProps> = ({
 
                   <input
                     type="date"
+                    disabled={!canEditTreatment}
                     value={
                       startDate
                     }
@@ -1326,6 +1358,7 @@ React.FC<RecordTreatmentScreenProps> = ({
 
                   <input
                     type="date"
+                    disabled={!canEditTreatment}
                     value={
                       lastDoseDate
                     }
@@ -1377,6 +1410,7 @@ React.FC<RecordTreatmentScreenProps> = ({
 
                   <input
                     type="text"
+                    disabled={!canEditTreatment}
                     value={
                       veterinarian
                     }
@@ -1397,6 +1431,7 @@ React.FC<RecordTreatmentScreenProps> = ({
 
                   <input
                     type="text"
+                    disabled={!canEditTreatment}
                     value={
                       vetRegNumber
                     }
@@ -1418,10 +1453,11 @@ React.FC<RecordTreatmentScreenProps> = ({
               type="submit"
               id="btn-save-treatment"
               disabled={
-                isSaving ||
-                medicinesLoading ||
-                !matchedDrug
-              }
+              !canEditTreatment ||
+              isSaving ||
+              medicinesLoading ||
+              !matchedDrug
+            }            
               className="w-full py-3.5 px-6 bg-primary hover:bg-primary-container active:scale-[0.99] text-on-primary rounded-xl text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
             >
 
@@ -1433,6 +1469,7 @@ React.FC<RecordTreatmentScreenProps> = ({
                   : 'Save & Log Electronic Record'}
               </span>
             </button>
+            
           </form>
         </div>
 

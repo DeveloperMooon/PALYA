@@ -40,7 +40,7 @@ export const SmartAlertsScreen: React.FC<SmartAlertsScreenProps> = ({
 
   // "Acknowledge" abhi sirf is session ke liye local hai
   // (backend mein alerts save nahi hote, khud-ba-khud calculate hote hain
-  // treatments data se â€” isliye "reviewed" state permanently store karne ka
+  // treatments data se -” isliye "reviewed" state permanently store karne ka
   // koi table nahi hai. Future improvement: alerts_reviewed table banake yahan wire karna)
   const [reviewedIds, setReviewedIds] = useState<Set<string>>(new Set());
 

@@ -186,7 +186,7 @@ export const ScanTagModal: React.FC<ScanTagModalProps> = ({
 
                 <div className="mt-2 text-xs text-on-surface-variant space-y-1">
                   <p>
-                    <strong className="text-on-surface">Breed / Age:</strong> {selectedAnimal.breed} ({selectedAnimal.age}) â€¢ {selectedAnimal.weight} kg
+                    <strong className="text-on-surface">Breed / Age:</strong> {selectedAnimal.breed} ({selectedAnimal.age}) - {selectedAnimal.weight} kg
                   </p>
                   <p>
                     <strong className="text-on-surface">Farm:</strong> {selectedAnimal.farmName}

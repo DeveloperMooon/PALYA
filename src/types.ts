@@ -57,6 +57,7 @@ export type KycStatus =
 export interface AuthUser {
   id: string;
   fullName: string;
+  age?: number;
   mobileNumber: string;
   role: AppRole;
   address?: string;

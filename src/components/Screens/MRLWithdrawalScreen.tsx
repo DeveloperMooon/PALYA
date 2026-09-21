@@ -657,7 +657,7 @@ React.FC<MRLWithdrawalScreenProps> = ({
                 year: 'numeric'
               }
             )
-        : 'â€”';
+        :'-' ;
 
   /* =======================================================
      STATUS
@@ -688,7 +688,7 @@ React.FC<MRLWithdrawalScreenProps> = ({
     dateString: string
   ) => {
     if (!dateString) {
-      return 'â€”';
+      return '—';
     }
 
     const date =
@@ -862,11 +862,11 @@ React.FC<MRLWithdrawalScreenProps> = ({
                         {animal.id}
                         {' ('}
                         {animal.tag}
-                        {') â€” '}
+                        {') — '}
                         {
                           animal.species
                         }
-                        {' â€” '}
+                        {' — '}
                         {animal.name ||
                           animal.breed}
                       </option>
@@ -1269,7 +1269,7 @@ React.FC<MRLWithdrawalScreenProps> = ({
                   <span className="text-2xl font-black text-primary">
                     {drugInfo
                       ? drugInfo.mrl
-                      : 'â€”'}
+                      : '—'}
                   </span>
 
                   <span className="text-xs text-outline ml-1">
@@ -1348,7 +1348,7 @@ React.FC<MRLWithdrawalScreenProps> = ({
                     >
                       {drugInfo
                         ? withdrawalDays
-                        : 'â€”'}
+                        : '—'}
                     </span>
 
                     <span
@@ -1383,9 +1383,9 @@ React.FC<MRLWithdrawalScreenProps> = ({
                       lastDoseDate
                     )
                   }
-                  {' â€¢ '}
+                  {' — '}
                   Route:{' '}
-                  {route || 'â€”'}
+                  {route || '—'}
                 </p>
               </div>
             </div>
@@ -1468,7 +1468,7 @@ React.FC<MRLWithdrawalScreenProps> = ({
                 </span>
 
                 <span className="text-xs font-extrabold text-primary">
-                  {species || 'â€”'}
+                  {species || '—'}
                 </span>
               </div>
 
@@ -1495,7 +1495,7 @@ React.FC<MRLWithdrawalScreenProps> = ({
                     : isWithdrawalActive
                       ? `Active (${
                           daysLeft ??
-                          'â€”'
+                          '—'
                         } days)`
                       : 'Not Confirmed'}
                 </span>
@@ -1519,7 +1519,7 @@ React.FC<MRLWithdrawalScreenProps> = ({
                   <strong>
                     {
                       selectedAnimal?.id ||
-                      'â€”'
+                      '—'
                     }
                   </strong>
                 </div>
@@ -1527,14 +1527,14 @@ React.FC<MRLWithdrawalScreenProps> = ({
                 <div>
                   2. Species:{' '}
                   <strong>
-                    {species || 'â€”'}
+                    {species || '—'}
                   </strong>
                 </div>
 
                 <div>
                   3. Medicine:{' '}
                   <strong>
-                    {drug || 'â€”'}
+                    {drug || '—'}
                   </strong>
                 </div>
 
@@ -1589,8 +1589,8 @@ React.FC<MRLWithdrawalScreenProps> = ({
 
               <p className="text-[11px] text-outline">
                 Species:{' '}
-                {species || 'â€”'}
-                {' â€¢ '}
+                {species || '—'}
+                {' — '}
                 Medicine:{' '}
                 {drug || 'Not selected'}
               </p>

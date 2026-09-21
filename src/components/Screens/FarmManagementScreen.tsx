@@ -51,7 +51,7 @@ export const FarmManagementScreen: React.FC<FarmManagementScreenProps> = ({
 
               <p className="text-xs text-on-surface-variant mt-1.5 flex items-center gap-1">
                 <MapPin className="w-3.5 h-3.5 text-outline" />
-                <span>Meerut, Uttar Pradesh â€¢ Pin: 250404 â€¢ Managed by Rajesh Kumar</span>
+                <span>Meerut, Uttar Pradesh - Pin: 250404 - Managed by Rajesh Kumar</span>
               </p>
             </div>
           </div>
@@ -252,7 +252,7 @@ export const FarmManagementScreen: React.FC<FarmManagementScreenProps> = ({
               Active Alerts for Shiv Dairy Farm: 2 Animals with Special Attention
             </p>
             <p className="text-xs text-on-surface mt-0.5">
-              COW-024 (Withdrawal Active - 5 days left) â€¢ COW-018 (Repeated Treatment Alert)
+              COW-024 (Withdrawal Active - 5 days left) - COW-018 (Repeated Treatment Alert)
             </p>
           </div>
         </div>

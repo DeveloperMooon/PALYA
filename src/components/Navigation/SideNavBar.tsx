@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAuth } from '../../context/AuthContext';
 
 import {
   LayoutDashboard,
@@ -37,7 +38,6 @@ interface SideNavBarProps {
   onToggleRole: () => void;
   alertCount: number;
   authUser?: AuthUser | null;
-  isAdminMode?: boolean;
   onLogout?: () => void;
   isMobileDrawer?: boolean;
   onClose?: () => void;
@@ -107,11 +107,12 @@ export const SideNavBar: React.FC<
   userRole,
   alertCount,
   authUser,
-  isAdminMode = false,
   onLogout,
   isMobileDrawer = false,
   onClose
 }) => {
+const { user: loggedInUser } = useAuth();
+const isActualAdmin = loggedInUser?.role === 'admin';
 
   const navItems: {
     id: ScreenId;
@@ -279,6 +280,7 @@ export const SideNavBar: React.FC<
       icon:
         <FileText className="w-5 h-5" />,
       roles: [
+        'livestock_owner',
         'government_official',
         'veterinarian'
       ]
@@ -316,23 +318,15 @@ export const SideNavBar: React.FC<
   ];
 
 
-  const visibleNavItems =
-  isAdminMode
-    ? navItems
-    : navItems.filter((item) => {
+  const visibleNavItems = navItems.filter((item) => {
+  if (isActualAdmin) return true;
 
-        if (!authUser?.role) {
-          return true;
-        }
+  if (!authUser?.role) return true;
 
-        if (!item.roles) {
-          return true;
-        }
+  if (!item.roles) return true;
 
-        return item.roles.includes(
-          authUser.role
-        );
-      });
+  return item.roles.includes(authUser.role);
+});
 
 
   const handleItemClick = (

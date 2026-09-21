@@ -154,7 +154,7 @@ export const LabResultScreen: React.FC<LabResultScreenProps> = ({
     }
     if (status === 'warning') {
       return {
-        label: 'Warning â€” Close to Limit',
+        label: 'Warning: Close to Limit',
         icon: AlertTriangle,
         classes: 'bg-surface-container text-on-surface-variant border-outline-variant',
       };
@@ -173,7 +173,7 @@ export const LabResultScreen: React.FC<LabResultScreenProps> = ({
           Add Lab Test Result
         </h1>
         <p className="text-sm text-on-surface-variant mt-1">
-          Kisi treatment ka residue lab-test value enter karo â€” system automatically MRL ke against compare karega.
+          Kisi treatment ka residue lab-test value enter karo -” system automatically MRL ke against compare karega.
         </p>
       </div>
 
@@ -208,7 +208,7 @@ export const LabResultScreen: React.FC<LabResultScreenProps> = ({
               )}
               {treatments.map((t) => (
                 <option key={t.id} value={t.id}>
-                  #{t.id} â€” {t.animal_id} â€” {t.drug} (Last dose: {t.last_dose_date})
+                  #{t.id} — {t.animal_id} — {t.drug} (Last dose: {t.last_dose_date})
                   {t.detected_residue !== null ? ' [Test already recorded]' : ''}
                 </option>
               ))}

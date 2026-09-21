@@ -193,6 +193,34 @@ async function hashPassword(
   }
 }
 
+function legacyPasswordHash(
+  password: string
+): string {
+  let hash = 0;
+
+  const str =
+    `palya_salt_${password}`;
+
+  for (
+    let i = 0;
+    i < str.length;
+    i++
+  ) {
+    const char =
+      str.charCodeAt(i);
+
+    hash =
+      (hash << 5) -
+      hash +
+      char;
+
+    hash |= 0;
+  }
+
+  return Math
+    .abs(hash)
+    .toString(16);
+}
 
 /*
 =========================================================
@@ -511,6 +539,94 @@ export const authService = {
     }
   },
 
+    async updateProfile(
+    fullName: string,
+    age?: number
+  ): Promise<AuthUser> {
+    const currentUser =
+      this.getAuthenticatedUser();
+
+    if (!currentUser) {
+      throw new Error(
+        'No authenticated user found.'
+      );
+    }
+
+    const trimmedName =
+      fullName.trim();
+
+    if (
+      trimmedName.length < 2 ||
+      /^\d+$/.test(trimmedName)
+    ) {
+      throw new Error(
+        'Please enter a valid name.'
+      );
+    }
+
+    const canHaveAge =
+      currentUser.role ===
+        'livestock_owner' ||
+      currentUser.role ===
+        'veterinarian';
+
+    if (
+      canHaveAge &&
+      age !== undefined &&
+      (
+        !Number.isInteger(age) ||
+        age < 1 ||
+        age > 120
+      )
+    ) {
+      throw new Error(
+        'Please enter a valid age.'
+      );
+    }
+
+    const updatedUser: AuthUser = {
+      ...currentUser,
+      fullName: trimmedName,
+      ...(canHaveAge
+        ? { age }
+        : {}),
+      updatedAt:
+        new Date().toISOString()
+    };
+
+    const users =
+      await initializeUsersDb();
+
+    const userIndex =
+      users.findIndex(
+        (record) =>
+          record.user.id ===
+          currentUser.id
+      );
+
+    if (userIndex === -1) {
+      throw new Error(
+        'User account not found.'
+      );
+    }
+
+    users[userIndex] = {
+      ...users[userIndex],
+      user: updatedUser
+    };
+
+    localStorage.setItem(
+      STORAGE_KEY_USERS_DB,
+      JSON.stringify(users)
+    );
+
+    this.setAuthenticatedUser(
+      updatedUser
+    );
+
+    return updatedUser;
+  },
+
 
   /*
   =======================================================
@@ -570,16 +686,21 @@ export const authService = {
       await hashPassword(
         password
       );
-
+    const legacyTargetHash =
+  legacyPasswordHash(
+    password
+  );
 
     const record =
-      users.find(
-        (u) =>
-          u.user.mobileNumber ===
-            cleanMobile &&
-          u.passwordHash ===
-            targetHash
-      );
+  users.find(
+    (u) =>
+      u.user.mobileNumber ===
+        cleanMobile &&
+      (
+        u.passwordHash === targetHash ||
+        u.passwordHash === legacyTargetHash
+      )
+  );
 
 
     if (!record) {
@@ -590,7 +711,18 @@ export const authService = {
 
     }
 
+if (
+  record.passwordHash !==
+  targetHash
+) {
+  record.passwordHash =
+    targetHash;
 
+  localStorage.setItem(
+    STORAGE_KEY_USERS_DB,
+    JSON.stringify(users)
+  );
+}
     this.setAuthenticatedUser(
       record.user
     );

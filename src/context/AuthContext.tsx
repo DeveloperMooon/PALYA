@@ -20,7 +20,13 @@ interface AuthContextType {
   verifyRegistrationOtp: (otpCode: string) => Promise<AuthUser>;
   resendRegistrationOtp: () => Promise<{ otpCode: string }>;
   updateUserKyc: (status: AuthUser['kycStatus']) => void;
+  
+  updateProfile: (
+  fullName: string,
+  age?: number
+) => Promise<AuthUser>;
 }
+
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -88,6 +94,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const updateProfile = async (
+  fullName: string,
+  age?: number
+): Promise<AuthUser> => {
+  const updatedUser =
+    await authService.updateProfile(
+      fullName,
+      age
+    );
+
+  setUser(updatedUser);
+
+  return updatedUser;
+};
+
   return (
     <AuthContext.Provider
       value={{
@@ -98,7 +119,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         initiateRegistration,
         verifyRegistrationOtp,
         resendRegistrationOtp,
-        updateUserKyc
+        updateUserKyc,
+        updateProfile
       }}
     >
       {children}
