@@ -11,6 +11,7 @@ interface AuthContextType {
   logout: () => void;
   initiateRegistration: (params: {
     fullName: string;
+    email: string;
     mobileNumber: string;
     role: AppRole;
     password: string;
@@ -36,20 +37,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Check persisted session on initial mount
   useEffect(() => {
+  let active = true;
+
+  const restoreAuthSession = async () => {
     try {
-      const persistedUser = authService.getAuthenticatedUser();
-      if (persistedUser) {
-        setUser(persistedUser);
-        setAuthStatus('authenticated');
-      } else {
-        setUser(null);
-        setAuthStatus('unauthenticated');
-      }
+      const restoredUser =
+        await authService.restoreSession();
+
+      if (!active) return;
+
+      setUser(restoredUser);
+
+      setAuthStatus(
+        restoredUser
+          ? 'authenticated'
+          : 'unauthenticated'
+      );
     } catch {
+      if (!active) return;
+
       setUser(null);
       setAuthStatus('unauthenticated');
     }
-  }, []);
+  };
+
+  void restoreAuthSession();
+
+  return () => {
+    active = false;
+  };
+}, []);
 
   const login = async (mobileNumber: string, password: string): Promise<AuthUser> => {
     const authenticatedUser = await authService.login(mobileNumber, password);
@@ -66,6 +83,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const initiateRegistration = async (params: {
     fullName: string;
+    email: string;
     mobileNumber: string;
     role: AppRole;
     password: string;

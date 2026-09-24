@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
 
 import {
   AnimatePresence,
@@ -43,8 +44,21 @@ export const SettingsScreen = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState('');
   const [saveSuccess, setSaveSuccess] = useState(false);
+  useEffect(() => {
+  if (!isEditing) {
+    setFullName(
+      user?.fullName ?? ''
+    );
 
-  const showAge =
+    setAge(
+      user?.age?.toString() ?? ''
+    );
+  }
+}, [
+  user,
+  isEditing
+]);
+   const showAge =
     user?.role === 'livestock_owner' ||
     user?.role === 'veterinarian';
     const handleCancel = () => {

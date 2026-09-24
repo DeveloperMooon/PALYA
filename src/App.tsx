@@ -198,11 +198,18 @@ function AppContent() {
 
 
   const [
-    currentScreen,
-    setCurrentScreen
-  ] = useState<ScreenId>(
-    'landing'
-  );
+  currentScreen,
+  setCurrentScreen
+] = useState<ScreenId>(() => {
+  const hashScreen =
+    window.location.hash
+      .replace(/^#\//, '')
+      .trim();
+
+  return (
+    hashScreen || 'landing'
+  ) as ScreenId;
+});
 
 
   /*

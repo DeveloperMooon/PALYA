@@ -2,8 +2,10 @@ import 'dotenv/config';
 
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 import { supabase } from './db/supabase';
+import { authRouter } from './routes/authRoutes';
 
 import {
   calculateClearanceDate,
@@ -19,13 +21,33 @@ const app = express();
 const PORT =
   Number(process.env.PORT) || 5000;
 
-app.use(cors());
+  const JWT_SECRET =
+  process.env.JWT_SECRET;
+
+if (!JWT_SECRET) {
+  throw new Error(
+    'Missing JWT_SECRET environment variable'
+  );
+}
+
+app.use(
+  cors({
+    origin:
+      process.env.CLIENT_URL ||
+      'http://localhost:3000',
+    credentials: true,
+  })
+);
+
+app.use(cookieParser());
 
 app.use(
   express.json({
     limit: '10mb',
   })
 );
+
+app.use('/api/auth', authRouter);
 
 /* =========================================================
    HEALTH CHECK
@@ -182,6 +204,7 @@ app.delete(
         .from('animals')
         .delete()
         .eq('animal_id', animalId);
+
       if (animalDeleteError) {
         throw animalDeleteError;
       }
@@ -1585,7 +1608,7 @@ app.post(
 
       formData.append(
         'language_code',
-        'hi-IN'
+        'unknown'
       );
 
       const sttResponse =
@@ -1631,11 +1654,24 @@ app.post(
         sttData
       );
 
-      const transcript =
+            const transcript =
         String(
           sttData.transcript ||
           ''
         ).trim();
+
+      // Sarvam STT ne jo language detect ki hai, wahi TTS (voice reply) ke liye bhi use karenge
+      // Agar kisi wajah se detect na ho paaye, to Hindi ko safe default rakha hai
+      const detectedLanguage =
+        String(
+          sttData.language_code ||
+          'hi-IN'
+        );
+
+      console.log(
+        'DETECTED LANGUAGE:',
+        detectedLanguage
+      );
 
       console.log(
         'STT:',
@@ -1829,7 +1865,7 @@ When treatment or regulatory verification is required, recommend veterinarian or
                   reply,
 
                 language_code:
-                  'hi-IN',
+                  detectedLanguage,
 
                 speaker:
                   'shubh',

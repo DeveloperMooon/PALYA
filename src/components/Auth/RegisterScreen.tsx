@@ -22,6 +22,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
   // Form fields
   const [fullName, setFullName] = useState('');
   const [mobileNumber, setMobileNumber] = useState('');
+  const [email, setEmail] = useState('');
   const [selectedRole, setSelectedRole] = useState<AppRole | undefined>(undefined);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -38,6 +39,8 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
   // Field touched states for validation
   const [nameTouched, setNameTouched] = useState(false);
   const [mobileTouched, setMobileTouched] = useState(false);
+  const [emailTouched, setEmailTouched] =
+  useState(false);
   const [roleTouched, setRoleTouched] = useState(false);
   const [passwordTouched, setPasswordTouched] = useState(false);
   const [confirmTouched, setConfirmTouched] = useState(false);
@@ -45,6 +48,11 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
 
   // Field validation helpers
   const cleanMobile = mobileNumber.replace(/\D/g, '');
+  const cleanEmail =
+  email.trim().toLowerCase();
+
+const emailPattern =
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const cleanPincode = pincode.replace(/\D/g, '');
 
   const getNameError = () => {
@@ -62,6 +70,15 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
     if (cleanMobile.length !== 10) return 'Please enter a valid 10-digit mobile number.';
     return null;
   };
+
+  const getEmailError = () => {
+  if (!emailTouched) return null;
+  if (!cleanEmail) return 'This field is required.';
+  if (!emailPattern.test(cleanEmail)) {
+    return 'Please enter a valid email address.';
+  }
+  return null;
+};
 
   const getRoleError = () => {
     if (!roleTouched) return null;
@@ -94,6 +111,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
     fullName.trim().length >= 2 &&
     !/^\d+$/.test(fullName.trim()) &&
     cleanMobile.length === 10 &&
+    emailPattern.test(cleanEmail) &&
     !!selectedRole &&
     password.length >= 6 &&
     confirmPassword === password &&
@@ -115,6 +133,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
     e.preventDefault();
     setNameTouched(true);
     setMobileTouched(true);
+    setEmailTouched(true);
     setRoleTouched(true);
     setPasswordTouched(true);
     setConfirmTouched(true);
@@ -128,6 +147,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
     try {
       const result = await initiateRegistration({
         fullName,
+        email: cleanEmail,
         mobileNumber: cleanMobile,
         role: selectedRole,
         password,
@@ -277,6 +297,43 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
                 </p>
               )}
             </div>
+
+            {/* 3. Email Address * */}
+<div>
+  <label
+    htmlFor="reg-email"
+    className="block text-xs font-bold text-[#26364A] mb-1.5 uppercase tracking-wide"
+  >
+    Email Address{' '}
+    <span className="text-red-500">*</span>
+  </label>
+
+  <input
+    id="reg-email"
+    name="email"
+    type="email"
+    value={email}
+    onChange={(event) => {
+      setEmail(event.target.value);
+      setErrorMessage(null);
+    }}
+    onBlur={() => setEmailTouched(true)}
+    placeholder="Enter your email address"
+    autoComplete="email"
+    className={`w-full px-3.5 py-3 rounded-2xl border text-sm text-[#26364A] placeholder:text-slate-400 focus:outline-none transition-all ${
+      getEmailError()
+        ? 'border-red-400 ring-2 ring-red-100'
+        : 'border-slate-300 focus:border-[#16A34A] focus:ring-2 focus:ring-[#16A34A]/20'
+    }`}
+    disabled={isLoading}
+  />
+
+  {getEmailError() && (
+    <p className="text-xs font-medium text-red-600 mt-1.5">
+      {getEmailError()}
+    </p>
+  )}
+</div>
 
             {/* 3. User Type * (Bottom Sheet Trigger) */}
             <div>
