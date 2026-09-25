@@ -24,7 +24,8 @@ interface AuthContextType {
   
   updateProfile: (
   fullName: string,
-  age?: number
+  age?: number,
+  farmName?: string
 ) => Promise<AuthUser>;
 }
 
@@ -114,13 +115,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const updateProfile = async (
   fullName: string,
-  age?: number
+  age?: number,
+  farmName?: string
 ): Promise<AuthUser> => {
-  const updatedUser =
-    await authService.updateProfile(
-      fullName,
-      age
-    );
+  const updatedUser = await authService.updateProfile(
+    fullName,
+    age,
+    farmName
+  );
 
   setUser(updatedUser);
 

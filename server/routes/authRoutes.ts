@@ -39,6 +39,7 @@ interface AppUserRow {
   password_hash: string;
   address: string | null;
   pincode: string | null;
+  farm_name: string | null;
   kyc_status: string;
   created_at: string;
   updated_at: string;
@@ -76,6 +77,7 @@ function publicUser(row: AppUserRow) {
     role: row.role,
     address: row.address ?? undefined,
     pincode: row.pincode ?? undefined,
+    farmName: row.farm_name ?? undefined,
     kycStatus: row.kyc_status,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -176,6 +178,11 @@ router.patch(
       const age =
         req.body?.age;
 
+        const farmName =
+  typeof req.body?.farmName === 'string'
+    ? req.body.farmName.trim()
+    : undefined;
+
       if (
         fullName.length < 2 ||
         /^\d+$/.test(fullName)
@@ -200,9 +207,19 @@ router.patch(
         });
       }
 
+      if (
+  farmName !== undefined &&
+  (farmName.length < 2 || farmName.length > 100)
+) {
+  return res.status(400).json({
+    error: 'Please enter a valid farm name.',
+  });
+}
+
       const updates: {
         full_name: string;
         age?: number;
+        farm_name?: string;
         updated_at: string;
       } = {
         full_name: fullName,
@@ -213,7 +230,9 @@ router.patch(
       if (age !== undefined) {
         updates.age = age;
       }
-
+     if (farmName !== undefined) {
+  updates.farm_name = farmName;
+}
       const {
         data: updatedUser,
         error,
@@ -222,7 +241,7 @@ router.patch(
         .update(updates)
         .eq('id', userId)
         .select(
-          'id, auth_user_id, full_name, age, email, mobile_number, role, password_hash, address, pincode, kyc_status, created_at, updated_at'
+          'id, auth_user_id, full_name, age, email, mobile_number, role, password_hash, address, pincode, farm_name, kyc_status, created_at, updated_at'
         )
         .single<AppUserRow>();
 
@@ -433,7 +452,7 @@ router.post('/register', async (req: Request, res: Response) => {
         kyc_status: 'not_started',
       })
       .select(
-        'id, auth_user_id, full_name, age, email, mobile_number, role, password_hash, address, pincode, kyc_status, created_at, updated_at'
+        'id, auth_user_id, full_name, age, email, mobile_number, role, password_hash, address, pincode, farm_name, kyc_status, created_at, updated_at'
       )
       .single<AppUserRow>();
 
@@ -509,7 +528,7 @@ router.post('/login', async (req: Request, res: Response) => {
     } = await supabase
       .from('app_users')
       .select(
-        'id, auth_user_id, full_name, age, email, mobile_number, role, password_hash, address, pincode, kyc_status, created_at, updated_at'
+        'id, auth_user_id, full_name, age, email, mobile_number, role, password_hash, address, pincode, farm_name, kyc_status, created_at, updated_at'
       )
       .eq(
         'mobile_number',
@@ -619,7 +638,7 @@ router.get('/me', async (req: Request, res: Response) => {
     } = await supabase
       .from('app_users')
       .select(
-        'id, auth_user_id, full_name, age, email, mobile_number, role, password_hash, address, pincode, kyc_status, created_at, updated_at'
+        'id, auth_user_id, full_name, age, email, mobile_number, role, password_hash, address, pincode, farm_name, kyc_status, created_at, updated_at'
       )
       .eq(
         'id',

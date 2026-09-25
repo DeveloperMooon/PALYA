@@ -1,4 +1,5 @@
 ﻿import React, { useState } from 'react';
+import { useAuth } from '../../context/AuthContext';
 import {
   Building2,
   MapPin,
@@ -29,6 +30,11 @@ export const FarmManagementScreen: React.FC<FarmManagementScreenProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<'livestock' | 'treatments' | 'mrl' | 'amu' | 'alerts'>('livestock');
 
+  const { user } = useAuth();
+
+const locationText = user?.address?.trim() || 'Location not added';
+const pincodeText = user?.pincode ? ` - Pin: ${user.pincode}` : '';
+const managerName = user?.fullName || 'Unknown';
   return (
     <div className="space-y-6 pb-12">
       {/* Farm Profile Header */}
@@ -40,8 +46,9 @@ export const FarmManagementScreen: React.FC<FarmManagementScreenProps> = ({
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-2xl sm:text-3xl font-black text-primary">Shiv Dairy Farm</h1>
-                <span className="text-xs font-mono font-bold bg-surface-container-high text-primary px-2.5 py-0.5 rounded-md">
+               <h1 className="text-2xl sm:text-3xl font-black text-primary">
+                 {user?.farmName || 'Farm name not added'}
+               </h1>                <span className="text-xs font-mono font-bold bg-surface-container-high text-primary px-2.5 py-0.5 rounded-md">
                   FARM-UP-001
                 </span>
                 <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
@@ -51,7 +58,12 @@ export const FarmManagementScreen: React.FC<FarmManagementScreenProps> = ({
 
               <p className="text-xs text-on-surface-variant mt-1.5 flex items-center gap-1">
                 <MapPin className="w-3.5 h-3.5 text-outline" />
-                <span>Meerut, Uttar Pradesh - Pin: 250404 - Managed by Rajesh Kumar</span>
+                <span>
+                {locationText}
+                {pincodeText}
+                {' - Managed by '}
+                {managerName}
+                </span>
               </p>
             </div>
           </div>

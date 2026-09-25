@@ -41,6 +41,7 @@ export const SettingsScreen = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [fullName, setFullName] = useState(user?.fullName ?? '');
   const [age, setAge] = useState(user?.age?.toString() ?? '');
+  const [farmName, setFarmName] = useState(user?.farmName ?? '');
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState('');
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -53,6 +54,10 @@ export const SettingsScreen = () => {
     setAge(
       user?.age?.toString() ?? ''
     );
+
+    setFarmName(
+      user?.farmName ?? ''
+    );
   }
 }, [
   user,
@@ -64,10 +69,14 @@ export const SettingsScreen = () => {
     const handleCancel = () => {
     setFullName(user?.fullName ?? '');
     setAge(user?.age?.toString() ?? '');
+    setFarmName(user?.farmName ?? '');
     setSaveError('');
     setSaveSuccess(false);
     setIsEditing(false);
   };
+
+  const showFarmName =
+  user?.role === 'livestock_owner';
 
   const handleSave = async () => {
     setSaveError('');
@@ -77,8 +86,9 @@ export const SettingsScreen = () => {
     try {
       await updateProfile(
         fullName.trim(),
-        showAge && age ? Number(age) : undefined
-      );
+        showAge && age ? Number(age) : undefined,
+        showFarmName ? farmName.trim() : undefined
+      );;
 
       setSaveSuccess(true);
       setIsEditing(false);
@@ -218,6 +228,26 @@ export const SettingsScreen = () => {
                     />
                   </label>
                 )}
+
+                {showFarmName && (
+  <label className="flex flex-col gap-1.5 text-xs font-medium text-on-surface sm:col-span-2">
+    Farm Name
+
+    <input
+      type="text"
+      value={farmName}
+      minLength={2}
+      maxLength={100}
+      required
+      disabled={isSaving}
+      onChange={(event) =>
+        setFarmName(event.target.value)
+      }
+      className="min-h-10 rounded-md border border-outline-variant/50 bg-surface-container-low px-3 text-sm text-on-surface outline-none transition-colors duration-150 placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:opacity-60"
+      placeholder="Enter your farm name"
+    />
+  </label>
+)}
               </div>
 
               {saveError && (
@@ -232,7 +262,11 @@ export const SettingsScreen = () => {
               <div className="mt-4 flex items-center gap-2">
                 <motion.button
                   type="submit"
-                  disabled={isSaving || !fullName.trim()}
+                  disabled={
+                    isSaving ||
+                    !fullName.trim() ||
+                    (showFarmName && !farmName.trim())
+                  }
                   whileTap={
                     reduceMotion || isSaving
                       ? undefined
@@ -297,6 +331,19 @@ export const SettingsScreen = () => {
                   </p>
                 </div>
               )}
+
+              {showFarmName && (
+  <div>
+    <p className="text-xs text-on-surface-variant">
+      Farm Name
+    </p>
+
+    <p className="mt-1 text-sm font-medium text-on-surface">
+      {user?.farmName || 'Not provided'}
+    </p>
+  </div>
+)}
+
             </motion.div>
           )}
         </AnimatePresence>

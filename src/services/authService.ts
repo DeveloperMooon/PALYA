@@ -448,9 +448,12 @@ export const authService = {
   },
 
   async updateProfile(
-    fullName: string,
-    age?: number
-  ): Promise<AuthUser> {
+       fullName: string,
+       age?: number,
+       farmName?: string
+       ): Promise<AuthUser> {
+
+        
     const response =
       await apiRequest<ApiUserResponse>(
         '/api/auth/profile',
@@ -460,6 +463,7 @@ export const authService = {
           body: JSON.stringify({
             fullName,
             age,
+            farmName,
           }),
         }
       );

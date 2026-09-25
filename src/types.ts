@@ -62,6 +62,7 @@ export interface AuthUser {
   role: AppRole;
   address?: string;
   pincode?: string;
+  farmName?: string;
   kycStatus: KycStatus;
   createdAt: string;
   updatedAt: string;
