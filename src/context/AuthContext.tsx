@@ -1,14 +1,35 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { AuthUser, AppRole } from '../types';
-import { authService } from '../services/authService';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
-export type AuthStatus = 'authenticated' | 'unauthenticated' | 'loading';
+import {
+  AppRole,
+  AuthUser,
+} from '../types';
+
+import {
+  authService,
+} from '../services/authService';
+
+export type AuthStatus =
+  | 'authenticated'
+  | 'unauthenticated'
+  | 'loading';
 
 interface AuthContextType {
   user: AuthUser | null;
   authStatus: AuthStatus;
-  login: (mobileNumber: string, password: string) => Promise<AuthUser>;
+
+  login: (
+    mobileNumber: string,
+    password: string
+  ) => Promise<AuthUser>;
+
   logout: () => void;
+
   initiateRegistration: (params: {
     fullName: string;
     email: string;
@@ -17,62 +38,96 @@ interface AuthContextType {
     password: string;
     address?: string;
     pincode?: string;
-  }) => Promise<{ otpCode: string; maskedPhone: string }>;
-  verifyRegistrationOtp: (otpCode: string) => Promise<AuthUser>;
-  resendRegistrationOtp: () => Promise<{ otpCode: string }>;
-  updateUserKyc: (status: AuthUser['kycStatus']) => void;
-  
+  }) => Promise<{
+    otpCode: string;
+    maskedPhone: string;
+  }>;
+
+  verifyRegistrationOtp: (
+    otpCode: string
+  ) => Promise<AuthUser>;
+
+  resendRegistrationOtp: () => Promise<{
+    otpCode: string;
+  }>;
+
+  updateUserKyc: (
+    status: AuthUser['kycStatus']
+  ) => void;
+
   updateProfile: (
-  fullName: string,
-  age?: number,
-  farmName?: string
-) => Promise<AuthUser>;
+    fullName: string,
+    age?: number,
+    farmName?: string,
+    farmLatitude?: number,
+    farmLongitude?: number
+  ) => Promise<AuthUser>;
 }
 
+const AuthContext =
+  createContext<AuthContextType | undefined>(
+    undefined
+  );
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthProvider: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
+  const [user, setUser] =
+    useState<AuthUser | null>(null);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [authStatus, setAuthStatus] = useState<AuthStatus>('loading');
+  const [authStatus, setAuthStatus] =
+    useState<AuthStatus>('loading');
 
-  // Check persisted session on initial mount
   useEffect(() => {
-  let active = true;
+    let active = true;
 
-  const restoreAuthSession = async () => {
-    try {
-      const restoredUser =
-        await authService.restoreSession();
+    const restoreAuthSession =
+      async () => {
+        try {
+          const restoredUser =
+            await authService.restoreSession();
 
-      if (!active) return;
+          if (!active) {
+            return;
+          }
 
-      setUser(restoredUser);
+          setUser(restoredUser);
 
-      setAuthStatus(
-        restoredUser
-          ? 'authenticated'
-          : 'unauthenticated'
+          setAuthStatus(
+            restoredUser
+              ? 'authenticated'
+              : 'unauthenticated'
+          );
+        } catch {
+          if (!active) {
+            return;
+          }
+
+          setUser(null);
+          setAuthStatus('unauthenticated');
+        }
+      };
+
+    void restoreAuthSession();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const login = async (
+    mobileNumber: string,
+    password: string
+  ): Promise<AuthUser> => {
+    const authenticatedUser =
+      await authService.login(
+        mobileNumber,
+        password
       );
-    } catch {
-      if (!active) return;
 
-      setUser(null);
-      setAuthStatus('unauthenticated');
-    }
-  };
-
-  void restoreAuthSession();
-
-  return () => {
-    active = false;
-  };
-}, []);
-
-  const login = async (mobileNumber: string, password: string): Promise<AuthUser> => {
-    const authenticatedUser = await authService.login(mobileNumber, password);
     setUser(authenticatedUser);
     setAuthStatus('authenticated');
+
     return authenticatedUser;
   };
 
@@ -82,52 +137,81 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setAuthStatus('unauthenticated');
   };
 
-  const initiateRegistration = async (params: {
-    fullName: string;
-    email: string;
-    mobileNumber: string;
-    role: AppRole;
-    password: string;
-    address?: string;
-    pincode?: string;
-  }) => {
-    return await authService.initiateRegistration(params);
+  const initiateRegistration = async (
+    params: {
+      fullName: string;
+      email: string;
+      mobileNumber: string;
+      role: AppRole;
+      password: string;
+      address?: string;
+      pincode?: string;
+    }
+  ) => {
+    return await authService.initiateRegistration(
+      params
+    );
   };
 
-  const verifyRegistrationOtp = async (otpCode: string): Promise<AuthUser> => {
-    const verifiedUser = await authService.verifyRegistrationOtp(otpCode);
+  const verifyRegistrationOtp = async (
+    otpCode: string
+  ): Promise<AuthUser> => {
+    const verifiedUser =
+      await authService.verifyRegistrationOtp(
+        otpCode
+      );
+
     setUser(verifiedUser);
     setAuthStatus('authenticated');
+
     return verifiedUser;
   };
 
-  const resendRegistrationOtp = async () => {
-    return await authService.resendRegistrationOtp();
-  };
+  const resendRegistrationOtp =
+    async () => {
+      return await authService.resendRegistrationOtp();
+    };
 
-  const updateUserKyc = (status: AuthUser['kycStatus']) => {
-    if (user) {
-      const updated = { ...user, kycStatus: status, updatedAt: new Date().toISOString() };
-      authService.setAuthenticatedUser(updated);
-      setUser(updated);
+  const updateUserKyc = (
+    status: AuthUser['kycStatus']
+  ) => {
+    if (!user) {
+      return;
     }
+
+    const updated = {
+      ...user,
+      kycStatus: status,
+      updatedAt: new Date().toISOString(),
+    };
+
+    authService.setAuthenticatedUser(
+      updated
+    );
+
+    setUser(updated);
   };
 
   const updateProfile = async (
-  fullName: string,
-  age?: number,
-  farmName?: string
-): Promise<AuthUser> => {
-  const updatedUser = await authService.updateProfile(
-    fullName,
-    age,
-    farmName
-  );
+    fullName: string,
+    age?: number,
+    farmName?: string,
+    farmLatitude?: number,
+    farmLongitude?: number
+  ): Promise<AuthUser> => {
+    const updatedUser =
+      await authService.updateProfile(
+        fullName,
+        age,
+        farmName,
+        farmLatitude,
+        farmLongitude
+      );
 
-  setUser(updatedUser);
+    setUser(updatedUser);
 
-  return updatedUser;
-};
+    return updatedUser;
+  };
 
   return (
     <AuthContext.Provider
@@ -140,7 +224,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         verifyRegistrationOtp,
         resendRegistrationOtp,
         updateUserKyc,
-        updateProfile
+        updateProfile,
       }}
     >
       {children}
@@ -149,9 +233,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 };
 
 export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
+  const context =
+    useContext(AuthContext);
+
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error(
+      'useAuth must be used within an AuthProvider'
+    );
   }
+
   return context;
 };

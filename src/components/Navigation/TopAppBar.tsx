@@ -306,70 +306,48 @@ const reduceThemeMotion = useReducedMotion();
 
 
   const quickJumpResults = [
+  {
+    title: 'COW-024 (UK-72819-331)',
+    subtitle: 'Active Withdrawal - 5 Days left',
+    screen: 'mrl' as ScreenId
+  },
+  {
+    title: 'Betamox LA (Amoxicillin)',
+    subtitle: 'MRL: 0.05 mg/kg - 5 days withdrawal',
+    screen: 'mrl' as ScreenId
+  },
+  {
+    title: 'Veterinary Case: COW-024',
+    subtitle: 'HP-CIA Review required',
+    screen: 'veterinary-case' as ScreenId
+  },
+  {
+    title:
+      authUser?.farmName ||
+      'Farm name not added',
 
-    {
-      title:
-        'COW-024 (UK-72819-331)',
+    subtitle:
+      [
+        authUser?.address?.trim(),
+        authUser?.pincode
+          ? `Pin: ${authUser.pincode}`
+          : null
+      ]
+        .filter(Boolean)
+        .join(' - ') ||
+      'Location not added',
 
-      subtitle:
-        'Active Withdrawal - 5 Days left',
-
-      screen:
-        'mrl' as ScreenId
-    },
-
-    {
-      title:
-        'Betamox LA (Amoxicillin)',
-
-      subtitle:
-        'MRL: 0.05 mg/kg - 5 days withdrawal',
-
-      screen:
-        'mrl' as ScreenId
-    },
-
-    {
-      title:
-        'Veterinary Case: COW-024',
-
-      subtitle:
-        'HP-CIA Review required',
-
-      screen:
-        'veterinary-case' as ScreenId
-    },
-
-    {
-      title:
-        'Shiv Dairy Farm (FARM-UP-001)',
-
-      subtitle:
-        '24 Livestock - Meerut UP',
-
-      screen:
-        'farm-management' as ScreenId
-    }
-
-  ].filter(
-    (item) =>
-
-      item.title
-        .toLowerCase()
-        .includes(
-          searchQuery
-            .toLowerCase()
-        )
-
-      ||
-
-      item.subtitle
-        .toLowerCase()
-        .includes(
-          searchQuery
-            .toLowerCase()
-        )
-  );
+    screen: 'farm-management' as ScreenId
+  }
+].filter(
+  (item) =>
+    item.title
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase()) ||
+    item.subtitle
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase())
+);
 
 
   return (

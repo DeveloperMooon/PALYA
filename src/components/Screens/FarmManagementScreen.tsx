@@ -35,6 +35,12 @@ export const FarmManagementScreen: React.FC<FarmManagementScreenProps> = ({
 const locationText = user?.address?.trim() || 'Location not added';
 const pincodeText = user?.pincode ? ` - Pin: ${user.pincode}` : '';
 const managerName = user?.fullName || 'Unknown';
+
+const farmMapUrl =
+  user?.farmLatitude !== undefined &&
+  user?.farmLongitude !== undefined
+    ? `https://www.google.com/maps?q=${user.farmLatitude},${user.farmLongitude}`
+    : undefined;
   return (
     <div className="space-y-6 pb-12">
       {/* Farm Profile Header */}
@@ -65,6 +71,17 @@ const managerName = user?.fullName || 'Unknown';
                 {managerName}
                 </span>
               </p>
+              {farmMapUrl && (
+  <a
+    href={farmMapUrl}
+    target="_blank"
+    rel="noreferrer"
+    className="mt-2 inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline"
+  >
+    <MapPin className="h-3.5 w-3.5" />
+    View exact farm location
+  </a>
+)}
             </div>
           </div>
 
@@ -261,7 +278,7 @@ const managerName = user?.fullName || 'Unknown';
           <AlertTriangle className="w-5 h-5 text-secondary shrink-0" />
           <div>
             <p className="text-xs font-bold text-on-surface">
-              Active Alerts for Shiv Dairy Farm: 2 Animals with Special Attention
+              Active Alerts for {user?.farmName || 'your farm'}: 2 Animals with Special Attention: 2 Animals with Special Attention
             </p>
             <p className="text-xs text-on-surface mt-0.5">
               COW-024 (Withdrawal Active - 5 days left) - COW-018 (Repeated Treatment Alert)

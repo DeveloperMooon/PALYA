@@ -63,6 +63,8 @@ export interface AuthUser {
   address?: string;
   pincode?: string;
   farmName?: string;
+  farmLatitude?: number;
+  farmLongitude?: number;
   kycStatus: KycStatus;
   createdAt: string;
   updatedAt: string;

@@ -40,6 +40,8 @@ interface AppUserRow {
   address: string | null;
   pincode: string | null;
   farm_name: string | null;
+  farm_latitude: number | null;
+  farm_longitude: number | null;
   kyc_status: string;
   created_at: string;
   updated_at: string;
@@ -78,6 +80,8 @@ function publicUser(row: AppUserRow) {
     address: row.address ?? undefined,
     pincode: row.pincode ?? undefined,
     farmName: row.farm_name ?? undefined,
+    farmLatitude: row.farm_latitude ?? undefined,
+    farmLongitude: row.farm_longitude ?? undefined,
     kycStatus: row.kyc_status,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -216,8 +220,56 @@ router.patch(
   });
 }
 
+const farmLatitude =
+  typeof req.body?.farmLatitude === 'number'
+    ? req.body.farmLatitude
+    : undefined;
+
+const farmLongitude =
+  typeof req.body?.farmLongitude === 'number'
+    ? req.body.farmLongitude
+    : undefined;
+
+if (
+  (farmLatitude === undefined) !==
+  (farmLongitude === undefined)
+) {
+  return res.status(400).json({
+    error:
+      'Both farm latitude and longitude are required.',
+  });
+}
+
+if (
+  farmLatitude !== undefined &&
+  (
+    !Number.isFinite(farmLatitude) ||
+    farmLatitude < -90 ||
+    farmLatitude > 90
+  )
+) {
+  return res.status(400).json({
+    error: 'Invalid farm latitude.',
+  });
+}
+
+if (
+  farmLongitude !== undefined &&
+  (
+    !Number.isFinite(farmLongitude) ||
+    farmLongitude < -180 ||
+    farmLongitude > 180
+  )
+) {
+  return res.status(400).json({
+    error: 'Invalid farm longitude.',
+  });
+}
+
       const updates: {
         full_name: string;
+        farm_latitude?: number;
+        farm_longitude?: number;
         age?: number;
         farm_name?: string;
         updated_at: string;
@@ -233,6 +285,14 @@ router.patch(
      if (farmName !== undefined) {
   updates.farm_name = farmName;
 }
+
+if (
+  farmLatitude !== undefined &&
+  farmLongitude !== undefined
+) {
+  updates.farm_latitude = farmLatitude;
+  updates.farm_longitude = farmLongitude;
+}
       const {
         data: updatedUser,
         error,
@@ -241,7 +301,7 @@ router.patch(
         .update(updates)
         .eq('id', userId)
         .select(
-          'id, auth_user_id, full_name, age, email, mobile_number, role, password_hash, address, pincode, farm_name, kyc_status, created_at, updated_at'
+          'id, auth_user_id, full_name, age, email, mobile_number, role, password_hash, address, pincode, farm_name, farm_latitude, farm_longitude, kyc_status, created_at, updated_at'
         )
         .single<AppUserRow>();
 
@@ -452,7 +512,7 @@ router.post('/register', async (req: Request, res: Response) => {
         kyc_status: 'not_started',
       })
       .select(
-        'id, auth_user_id, full_name, age, email, mobile_number, role, password_hash, address, pincode, farm_name, kyc_status, created_at, updated_at'
+        'id, auth_user_id, full_name, age, email, mobile_number, role, password_hash, address, pincode, farm_name, farm_latitude, farm_longitude, kyc_status, created_at, updated_at'
       )
       .single<AppUserRow>();
 
@@ -528,7 +588,7 @@ router.post('/login', async (req: Request, res: Response) => {
     } = await supabase
       .from('app_users')
       .select(
-        'id, auth_user_id, full_name, age, email, mobile_number, role, password_hash, address, pincode, farm_name, kyc_status, created_at, updated_at'
+        'id, auth_user_id, full_name, age, email, mobile_number, role, password_hash, address, pincode, farm_name, farm_latitude, farm_longitude, kyc_status, created_at, updated_at'
       )
       .eq(
         'mobile_number',
@@ -638,7 +698,7 @@ router.get('/me', async (req: Request, res: Response) => {
     } = await supabase
       .from('app_users')
       .select(
-        'id, auth_user_id, full_name, age, email, mobile_number, role, password_hash, address, pincode, farm_name, kyc_status, created_at, updated_at'
+        'id, auth_user_id, full_name, age, email, mobile_number, role, password_hash, address, pincode, farm_name, farm_latitude, farm_longitude, kyc_status, created_at, updated_at'
       )
       .eq(
         'id',

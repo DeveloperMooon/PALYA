@@ -448,31 +448,30 @@ export const authService = {
   },
 
   async updateProfile(
-       fullName: string,
-       age?: number,
-       farmName?: string
-       ): Promise<AuthUser> {
+  fullName: string,
+  age?: number,
+  farmName?: string,
+  farmLatitude?: number,
+  farmLongitude?: number
+): Promise<AuthUser> {
+  const response =
+    await apiRequest<ApiUserResponse>(
+      '/api/auth/profile',
+      {
+        method: 'PATCH',
+        body: JSON.stringify({
+          fullName,
+          age,
+          farmName,
+          farmLatitude,
+          farmLongitude,
+        }),
+      }
+    );
 
-        
-    const response =
-      await apiRequest<ApiUserResponse>(
-        '/api/auth/profile',
-        {
-          method: 'PATCH',
-
-          body: JSON.stringify({
-            fullName,
-            age,
-            farmName,
-          }),
-        }
-      );
-
-    currentUser =
-      response.user;
-
-    return response.user;
-  },
+  currentUser = response.user;
+  return response.user;
+},
 
   async updateKycStatus(
     status:
