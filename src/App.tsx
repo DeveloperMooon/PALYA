@@ -1,4 +1,5 @@
 ﻿import { SettingsScreen } from './components/Screens/SettingsScreen';
+import { FeedbackScreen } from './components/Screens/FeedbackScreen';
 import React, { useState, useEffect } from 'react';
 
 import {
@@ -2187,6 +2188,9 @@ function AppContent() {
             {currentScreen === 'settings' && (
   <SettingsScreen />
 )}
+{currentScreen === 'feedback' && (
+  <FeedbackScreen />
+)}
             </main>
 
           </div>
@@ -2200,6 +2204,7 @@ function AppContent() {
               currentScreen
             }
 
+            
             onNavigate={
               handleNavigate
             }

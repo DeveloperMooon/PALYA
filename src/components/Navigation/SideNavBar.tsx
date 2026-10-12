@@ -15,6 +15,7 @@ import {
   TrendingUp,
   FileText,
   Bot,
+  MessageSquare,
   Settings,
   QrCode,
   UserCheck,
@@ -300,6 +301,21 @@ const isActualAdmin = loggedInUser?.role === 'admin';
         'pharmaceutical_retailer'
       ]
     },
+
+    {
+  id: 'feedback',
+  label: 'Feedback',
+  icon: <MessageSquare className="w-5 h-5" />,
+  roles: [
+    'livestock_owner',
+    'veterinarian',
+    'laboratory',
+    'government_official',
+    'collector',
+    'pharmaceutical_retailer',
+    'admin'
+  ]
+},
 
     {
       id: 'settings',

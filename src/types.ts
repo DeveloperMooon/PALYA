@@ -25,6 +25,7 @@
   | 'reports'
   | 'ai-assistant'
   | 'settings'
+  | 'feedback'
   | 'admin-dashboard';
 
 export type UserRole =

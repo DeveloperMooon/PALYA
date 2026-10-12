@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import { supabase } from './db/supabase';
 import { authRouter } from './routes/authRoutes';
 
+import { feedbackRouter } from './routes/feedbackRoutes';
 import {
   calculateClearanceDate,
   getWithdrawalStatus,
@@ -48,7 +49,7 @@ app.use(
 );
 
 app.use('/api/auth', authRouter);
-
+app.use('/feedback', feedbackRouter);
 /* =========================================================
    HEALTH CHECK
 ========================================================= */
